@@ -1,0 +1,3 @@
+red
+select NRO_COMP,MONTO from ING_COMPR_DEU where FECHA_DEUDA <= CURRENT_DATE();
+Numero de comprobante,Monto deuda

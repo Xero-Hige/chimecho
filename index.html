@@ -1,0 +1,11 @@
+{% for alert in alerts %}
+<h1>{{ alert["NAME"]}}</h1>
+<h3>{{ alert["TYPE"]}}</h3>
+    <ul>
+        {% for tag in alert["TAGS"]%}
+        <li><b>{{tag[0]}}</b> -> <i>{{tag[1]}}</i></li>
+        {% endfor %}
+    </ul>
+    <hr>
+    <hr>
+{% endfor %}

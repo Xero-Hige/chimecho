@@ -12,9 +12,9 @@ def run():
             alert_query = my_file.readline().rstrip()
             alert_results_tags = my_file.readline().rstrip().split(",")
 
-            #cur = con.cursor()
-            #cur.execute(alert_query)
-            cur = [(12,13),(15,192),(8,88)]
+            cur = con.cursor()
+            cur.execute(alert_query)
+            #cur = [(12,13),(15,192),(8,88)]
             for result in cur:
                 alert = {}
                 alert["TYPE"] = alert_type

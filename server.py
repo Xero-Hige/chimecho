@@ -1,9 +1,9 @@
 from flask import Flask, render_template
 app = Flask(__name__)
 
-import daemon
+import alert_generator
 
 @app.route('/')
 def alerts():
-    alerts = daemon.run() #FIXME: Rename
+    alerts = alert_generator.run() #FIXME: Rename
     return render_template("index.html",alerts=alerts)

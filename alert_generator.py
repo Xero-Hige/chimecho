@@ -3,7 +3,7 @@ import cx_Oracle
 
 con = cx_Oracle.connect('CONECTION')
 
-def run():
+def generate_alerts():
     alerts = []
     for file_name in os.listdir("rules/"):
         with open("rules/"+file_name) as my_file:

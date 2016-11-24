@@ -23,5 +23,4 @@ def run():
                 alert["TAGS"] = tags
                 alerts.append(alert)
             cur.close()
-
-run()
+    return alerts

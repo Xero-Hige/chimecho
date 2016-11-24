@@ -1,7 +1,7 @@
 import os
 import cx_Oracle
 
-#con = cx_Oracle.connect('owner_rafam/ownerdba@154.2.6.107:1521/MEZEIZA')
+con = cx_Oracle.connect('owner_rafam/ownerdba@154.2.6.107:1521/MEZEIZA')
 
 def run():
     alerts = []

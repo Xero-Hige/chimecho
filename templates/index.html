@@ -1,11 +1,15 @@
-{% for alert in alerts %}
-<h1>{{ alert["NAME"]}}</h1>
-<h3>{{ alert["TYPE"]}}</h3>
-    <ul>
-        {% for tag in alert["TAGS"]%}
-        <li><b>{{tag[0]}}</b> -> <i>{{tag[1]}}</i></li>
-        {% endfor %}
-    </ul>
-    <hr>
-    <hr>
-{% endfor %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+
+<div class="list-group" width="75%">
+    {% for alert in alerts %}
+        <a href="#" class="list-group-item {{ groups[alert["TYPE"]] }}">
+            <h1>{{ alert["NAME"] }}</h1>
+            <h3>{{ alert["DESC"] }}</h3>
+            <ul>
+                {% for tag in alert["TAGS"] %}
+                    <li><b>{{ tag[0] }}</b> -> <i>{{ tag[1] }}</i></li>
+                {% endfor %}
+            </ul>
+        </a>
+    {% endfor %}
+</div>

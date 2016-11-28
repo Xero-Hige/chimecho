@@ -1,15 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}">
 
-<div class="list-group" width="75%">
-    {% for alert in alerts %}
-        <a href="#" class="list-group-item {{ groups[alert["TYPE"]] }}">
-            <h1>{{ alert["NAME"] }}</h1>
-            <h3>{{ alert["DESC"] }}</h3>
-            <ul>
-                {% for tag in alert["TAGS"] %}
-                    <li><b>{{ tag[0] }}</b> -> <i>{{ tag[1] }}</i></li>
-                {% endfor %}
-            </ul>
-        </a>
-    {% endfor %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="col-lg-2">
+
+                <div class="list-group">
+                    {% for alert in alerts %}
+                        <a href="#" class="list-group-item {{ groups[alert["TYPE"]] }}">
+                            <h1>{{ alert["NAME"] }}</h1>
+                            <h4>{{ alert["DESC"] }}</h4>
+                            <ul>
+                                {% for tag in alert["TAGS"] %}
+                                    <li><b>{{ tag[0] }}</b> -> <i>{{ tag[1] }}</i></li>
+                                {% endfor %}
+                            </ul>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-lg-3">
+
+                <div class="list-group">
+                    {% for alert in alerts %}
+                        <a href="#" class="list-group-item {{ groups[alert["TYPE"]] }}">
+                            <h1>{{ alert["NAME"] }}</h1>
+                            <h4>{{ alert["DESC"] }}</h4>
+                            <ul>
+                                {% for tag in alert["TAGS"] %}
+                                    <li><b>{{ tag[0] }}</b> -> <i>{{ tag[1] }}</i></li>
+                                {% endfor %}
+                            </ul>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-lg-3">
+
+                <div class="list-group">
+                    {% for alert in alerts[::-1] %}
+                        <a href="#" class="list-group-item {{ groups[alert["TYPE"]] }}">
+                            <h1>{{ alert["NAME"] }}</h1>
+                            <h4>{{ alert["DESC"] }}</h4>
+                            <ul>
+                                {% for tag in alert["TAGS"] %}
+                                    <li><b>{{ tag[0] }}</b> -> <i>{{ tag[1] }}</i></li>
+                                {% endfor %}
+                            </ul>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-lg-3">
+
+                <div class="list-group">
+                    {% for alert in alerts %}
+                        <a href="#" class="list-group-item {{ groups[alert["TYPE"]] }}">
+                            <h1>{{ alert["NAME"] }}</h1>
+                            <h4>{{ alert["DESC"] }}</h4>
+                            <ul>
+                                {% for tag in alert["TAGS"] %}
+                                    <li><b>{{ tag[0] }}</b> -> <i>{{ tag[1] }}</i></li>
+                                {% endfor %}
+                            </ul>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>
+
+</html>

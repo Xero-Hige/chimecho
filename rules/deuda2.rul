@@ -1,5 +1,5 @@
-red
-Moroso incobrable
-Persona con deuda en inmoviliaria de mucho tiempo
+yellow
+Moroso
+Persona con deuda hace mas de una semana
 select NRO_COMP,MONTO from ING_COMPR_DEU where FECHA_DEUDA <= CURRENT_DATE();
 Numero de comprobante,Monto deuda

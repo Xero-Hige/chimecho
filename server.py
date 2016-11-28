@@ -7,7 +7,7 @@ from dummy_alert_generator import generate_alerts
 groups = {"red": "list-group-item-danger", "green": "list-group-item-success", "blue": "list-group-item-info",
           "yellow": "list-group-item-warning"}
 
-enabled = {"red": False, "green": True, "yellow": True}
+enabled = {"red": True, "green": True, "yellow": True}
 
 
 @app.route('/')

@@ -19,7 +19,7 @@ def generate_alerts():
             cur = [[randint(0, 500) for x in range(len(alert_results_tags))] for i in range(randint(15, 30))]
             for result in cur:
                 alert = {}
-                alert["TYPE"] = choice(["red", "green", "blue", "yellow"])  # alert_type
+                alert["TYPE"] = choice(["red", "green", "yellow"])  # alert_type
                 alert["NAME"] = alert_name
                 alert["DESC"] = alert_description
                 tags = [(alert_results_tags[i], result[i]) for i in range(len(result))]

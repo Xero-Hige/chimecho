@@ -8,18 +8,38 @@
         <div class="col-lg-12">
 
             <div class="col-lg-2">
+                <a class="btn btn-primary btn-lg btn-block" href="/toggleRed" role="button">Rojas
+                    {% if not enabled["red"] %}
+                        <span class="badge">{{ amounts["red"] }}</span>
+                    {% endif %}
+                </a>
+                <a class="btn btn-primary btn-lg btn-block" href="/toggleYellow" role="button">Amarillas
+                    {% if not enabled["yellow"] %}
+                        <span class="badge">{{ amounts["yellow"] }}</span>
+                    {% endif %}
+                </a>
+                <a class="btn btn-primary btn-lg btn-block" href="/toggleGreen" role="button">Verdes
+                    {% if not enabled["green"] %}
+                        <span class="badge">{{ amounts["green"] }}</span>
+                    {% endif %}
+                </a>
+            </div>
+
+            <div class="col-lg-3">
 
                 <div class="list-group">
                     {% for alert in alerts %}
-                        <a href="#" class="list-group-item {{ groups[alert["TYPE"]] }}">
-                            <h1>{{ alert["NAME"] }}</h1>
-                            <h4>{{ alert["DESC"] }}</h4>
-                            <ul>
-                                {% for tag in alert["TAGS"] %}
-                                    <li><b>{{ tag[0] }}</b> -> <i>{{ tag[1] }}</i></li>
-                                {% endfor %}
-                            </ul>
-                        </a>
+                        {% if loop.index0 % 3 == 0 %}
+                            <a href="#" class="list-group-item {{ groups[alert["TYPE"]] }}">
+                                <h1>{{ alert["NAME"] }}</h1>
+                                <h4>{{ alert["DESC"] }}</h4>
+                                <ul>
+                                    {% for tag in alert["TAGS"] %}
+                                        <li><b>{{ tag[0] }}</b> -> <i>{{ tag[1] }}</i></li>
+                                    {% endfor %}
+                                </ul>
+                            </a>
+                        {% endif %}
                     {% endfor %}
                 </div>
             </div>
@@ -28,32 +48,17 @@
 
                 <div class="list-group">
                     {% for alert in alerts %}
-                        <a href="#" class="list-group-item {{ groups[alert["TYPE"]] }}">
-                            <h1>{{ alert["NAME"] }}</h1>
-                            <h4>{{ alert["DESC"] }}</h4>
-                            <ul>
-                                {% for tag in alert["TAGS"] %}
-                                    <li><b>{{ tag[0] }}</b> -> <i>{{ tag[1] }}</i></li>
-                                {% endfor %}
-                            </ul>
-                        </a>
-                    {% endfor %}
-                </div>
-            </div>
-
-            <div class="col-lg-3">
-
-                <div class="list-group">
-                    {% for alert in alerts[::-1] %}
-                        <a href="#" class="list-group-item {{ groups[alert["TYPE"]] }}">
-                            <h1>{{ alert["NAME"] }}</h1>
-                            <h4>{{ alert["DESC"] }}</h4>
-                            <ul>
-                                {% for tag in alert["TAGS"] %}
-                                    <li><b>{{ tag[0] }}</b> -> <i>{{ tag[1] }}</i></li>
-                                {% endfor %}
-                            </ul>
-                        </a>
+                        {% if loop.index0 % 3 == 1 %}
+                            <a href="#" class="list-group-item {{ groups[alert["TYPE"]] }}">
+                                <h1>{{ alert["NAME"] }}</h1>
+                                <h4>{{ alert["DESC"] }}</h4>
+                                <ul>
+                                    {% for tag in alert["TAGS"] %}
+                                        <li><b>{{ tag[0] }}</b> -> <i>{{ tag[1] }}</i></li>
+                                    {% endfor %}
+                                </ul>
+                            </a>
+                        {% endif %}
                     {% endfor %}
                 </div>
             </div>
@@ -62,15 +67,17 @@
 
                 <div class="list-group">
                     {% for alert in alerts %}
-                        <a href="#" class="list-group-item {{ groups[alert["TYPE"]] }}">
-                            <h1>{{ alert["NAME"] }}</h1>
-                            <h4>{{ alert["DESC"] }}</h4>
-                            <ul>
-                                {% for tag in alert["TAGS"] %}
-                                    <li><b>{{ tag[0] }}</b> -> <i>{{ tag[1] }}</i></li>
-                                {% endfor %}
-                            </ul>
-                        </a>
+                        {% if loop.index0 % 3 == 2 %}
+                            <a href="#" class="list-group-item {{ groups[alert["TYPE"]] }}">
+                                <h1>{{ alert["NAME"] }}</h1>
+                                <h4>{{ alert["DESC"] }}</h4>
+                                <ul>
+                                    {% for tag in alert["TAGS"] %}
+                                        <li><b>{{ tag[0] }}</b> -> <i>{{ tag[1] }}</i></li>
+                                    {% endfor %}
+                                </ul>
+                            </a>
+                        {% endif %}
                     {% endfor %}
                 </div>
             </div>

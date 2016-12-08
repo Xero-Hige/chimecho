@@ -1,8 +1,7 @@
-from flask import Flask, render_template , redirect, url_for
+from flask import Flask, render_template, redirect, url_for
+from dummy_alert_generator import generate_alerts
 
 app = Flask(__name__)
-
-from dummy_alert_generator import generate_alerts
 
 groups = {"red": "list-group-item-danger", "green": "list-group-item-success", "blue": "list-group-item-info",
           "yellow": "list-group-item-warning"}
@@ -29,17 +28,20 @@ def root():
     return render_template("index.html", alerts=filtered_alerts, groups=groups, amounts=amounts,
                            enabled=enabled)
 
+
 @app.route('/toggleRed')
-def toggleRed():
+def toggle_red():
     enabled["red"] = not enabled["red"]
     return redirect(url_for('root'))
 
+
 @app.route('/toggleGreen')
-def toggleGreen():
+def toggle_green():
     enabled["green"] = not enabled["green"]
     return redirect(url_for('root'))
 
+
 @app.route('/toggleYellow')
-def toggleYellow():
+def toggle_yellow():
     enabled["yellow"] = not enabled["yellow"]
     return redirect(url_for('root'))

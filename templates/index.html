@@ -1,7 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+<script>
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
+
+    function drag(ev) {
+        ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("text");
+        ev.target.appendChild(document.getElementById(data));
+    }
+</script>
 
 <div class="container-fluid">
     <div class="row">
@@ -25,62 +43,28 @@
                 </a>
             </div>
 
-            <div class="col-lg-3">
+            {% for  x in range(0,3) %}
+                <div class="col-lg-3">
 
-                <div class="list-group">
-                    {% for alert in alerts %}
-                        {% if loop.index0 % 3 == 0 %}
-                            <a href="#" class="list-group-item {{ groups[alert["TYPE"]] }}">
-                                <h1>{{ alert["NAME"] }}</h1>
-                                <h4>{{ alert["DESC"] }}</h4>
-                                <ul>
-                                    {% for tag in alert["TAGS"] %}
-                                        <li><b>{{ tag[0] }}</b> -> <i>{{ tag[1] }}</i></li>
-                                    {% endfor %}
-                                </ul>
-                            </a>
-                        {% endif %}
-                    {% endfor %}
+                    <div class="list-group" ondrop="drop(event)" ondragover="allowDrop(event)">
+                        {% for alert in alerts %}
+                            {% if loop.index0 % 3 == x %}
+                                <a class="list-group-item {{ groups[alert["TYPE"]] }}" draggable="true"
+                                   ondragstart="drag(event)" >
+                                    <h1>{{ alert["NAME"] }}</h1>
+                                    <h4>{{ alert["DESC"] }}</h4>
+                                    <ul>
+                                        {% for tag in alert["TAGS"] %}
+                                            <li><b>{{ tag[0] }}</b> -> <i>{{ tag[1] }}</i></li>
+                                        {% endfor %}
+                                    </ul>
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
                 </div>
-            </div>
+            {% endfor %}
 
-            <div class="col-lg-3">
-
-                <div class="list-group">
-                    {% for alert in alerts %}
-                        {% if loop.index0 % 3 == 1 %}
-                            <a href="#" class="list-group-item {{ groups[alert["TYPE"]] }}">
-                                <h1>{{ alert["NAME"] }}</h1>
-                                <h4>{{ alert["DESC"] }}</h4>
-                                <ul>
-                                    {% for tag in alert["TAGS"] %}
-                                        <li><b>{{ tag[0] }}</b> -> <i>{{ tag[1] }}</i></li>
-                                    {% endfor %}
-                                </ul>
-                            </a>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            </div>
-
-            <div class="col-lg-3">
-
-                <div class="list-group">
-                    {% for alert in alerts %}
-                        {% if loop.index0 % 3 == 2 %}
-                            <a href="#" class="list-group-item {{ groups[alert["TYPE"]] }}">
-                                <h1>{{ alert["NAME"] }}</h1>
-                                <h4>{{ alert["DESC"] }}</h4>
-                                <ul>
-                                    {% for tag in alert["TAGS"] %}
-                                        <li><b>{{ tag[0] }}</b> -> <i>{{ tag[1] }}</i></li>
-                                    {% endfor %}
-                                </ul>
-                            </a>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            </div>
 
         </div>
     </div>

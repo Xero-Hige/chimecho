@@ -1,0 +1,7 @@
+Cuenta Corriente Inmuebles
+0,Fecha de vencimiento|FECHA_VTO,Monto adeudado|SUM(MONTO_ORIGINAL)
+1,Fecha,FREE_COMPARER,MAYOR A|MENOR A|IGUAL A,>|<|=,FECHA_VTO {0} {1}
+2,Fecha,FREE_COMPARER,MAYOR A|MENOR A|IGUAL A,>|<|=,FECHA_VTO {0} {1}
+3,Estado,CONDITIONAL_COMPARER,IGUAL A|DISTINTO A,=|!=,S|D,s|d,ESTADO {0} {1}
+3,Estado,CONDITIONAL_COMPARER,IGUAL A|DISTINTO A,=|!=,S|D,s|d,ESTADO {0} {1}
+-1,"SELECT {FIELDS} nro_comprob FROM cc_inm WHERE {CLAUSES} group by nro_comprob"

@@ -1,5 +1,6 @@
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, request
 from dummy_alert_generator import generate_alerts
+import csv
 
 app = Flask(__name__)
 
@@ -27,6 +28,74 @@ def root():
 
     return render_template("index.html", alerts=filtered_alerts, groups=groups, amounts=amounts,
                            enabled=enabled)
+
+
+@app.route("/quest", methods=["POST"])
+def soldfor():
+    print (request.form)
+    fields = int(request.form["Fields_Number"])
+    querys = []
+    for field_id in range(0, fields):
+        if "CHK_{0}".format(field_id) in request.form:
+            option = request.form.get("{0}_OPTION".format(field_id), "")
+            print ("{0}_OPTION".format(field_id),option)
+            value = request.form.get("{0}_VALUE".format(field_id), "")
+            print ("{0}_VALUE".format(field_id),value)
+            query = request.form.get("{0}_QUERY".format(field_id), "")
+            print (option,value,query)
+            if not option or not value or not query:
+                continue
+
+            query = query.format(option, value)
+            querys.append(query)
+
+    query_string = " AND ".join(querys)
+    print (querys,query_string)
+    query = request.form["Query"]
+    query = query.replace("{CLAUSES}", query_string)
+    print (query)
+    return redirect(url_for('root'))
+
+
+@app.route('/quest')
+def create():
+    fields = {}
+    with open("classes") as my_file:
+        resource_name = my_file.readline()
+        reader = csv.reader(my_file)
+
+        for line in reader:
+            id = int(line[0])
+
+            if id == 0:
+                fields[id] = {"FIELDS": line[1].split("|")}
+                continue
+
+            elif id == -1:
+                fields[id] = {"QUERY": line[1]}
+                continue
+
+            name = line[1]
+            field_type = line[2]
+            field = {"NAME": name, "TYPE": field_type}
+
+            if field_type == "FREE_COMPARER" or field_type == "CONDITIONAL_COMPARER":
+                options_labels = line[3].split("|")
+                options_values = line[4].split("|")
+
+                field["OPTIONS"] = [(options_labels[i], options_values[i]) for i in range(len(options_values))]
+
+            if field_type == "CONDITIONAL_COMPARER":
+                options_labels = line[5].split("|")
+                options_values = line[6].split("|")
+
+                field["VALUES"] = [(options_labels[i], options_values[i]) for i in range(len(options_values))]
+                field["VALUES"] = [(options_labels[i], options_values[i]) for i in range(len(options_values))]
+
+            field["QUERY"] = line[-1]
+            fields[id] = field
+
+    return render_template("generator.html", fields=fields, resource_name=resource_name, sorted=sorted, len=len)
 
 
 @app.route('/toggleRed')

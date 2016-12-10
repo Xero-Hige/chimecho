@@ -6,18 +6,20 @@
 </head>
 <body>
 <form method="post" action="/create">
+    <h2>Descripcion de la alerta</h2>
     Nombre de la alerta: <input type="text" name="ALERT_NAME"><br>
     Descripcion: <input type="text" name="ALERT_DESC"><br>
     Prioridad <select name="ALERT_LEVEL">
-        {% for option in [("RED","Alta"),("GREEN","Baja"),("YELLOW","Media")] %}
-            <option value="{{ option[0] }}">{{ option[1] }}</option>
-        {% endfor %}
-    </select><br>
+    {% for option in [("GREEN","Baja"),("YELLOW","Media"),("RED","Alta")] %}
+        <option value="{{ option[0] }}">{{ option[1] }}</option>
+    {% endfor %}</select><br>
+    <h2>Campos a mostrar</h2>
     {% for field in fields[0]["FIELDS"] %}
         <input type="checkbox" name="FIELD_{{ field[1] }}"/> {{ field[0] }}
         <input type="hidden" name="{{ field[1] }}" value="{{ field[0] }}">
         <br>
     {% endfor %}
+    <h2>Condiciones de alerta</h2>
     {% for field_id in sorted(fields.keys()) if field_id >= 1 %}
         <div>
 

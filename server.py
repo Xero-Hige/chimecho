@@ -66,7 +66,17 @@ def soldfor():
     query_string = " AND ".join(querys)
     query = query.replace("{CLAUSES}", query_string)
 
-    print (query)
+    alert_level = request.form["ALERT_LEVEL"]
+    alert_name = request.form["ALERT_NAME"]
+    alert_description = request.form["ALERT_DESC"]
+
+    with open("rules/" + alert_name + ".rul", "w") as alert_file:
+        alert_file.write(alert_level+"\n")
+        alert_file.write(alert_name+"\n")
+        alert_file.write(alert_description+"\n")
+        alert_file.write(query+"\n")
+        alert_file.write(",".join(names)+"\n")
+
     return redirect(url_for('root'))
 
 

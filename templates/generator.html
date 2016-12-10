@@ -5,7 +5,12 @@
     <title>New Alert</title>
 </head>
 <body>
-<form method="post">
+<form method="post" action="/create">
+    {% for field in fields[0]["FIELDS"] %}
+        <input type="checkbox" name="FIELD_{{ field[1] }}"/> {{ field[0] }}
+        <input type="hidden" name="{{ field[1] }}" value="{{ field[0] }}">
+        <br>
+    {% endfor  %}
     {% for field_id in sorted(fields.keys()) if field_id >= 1 %}
         <div>
 

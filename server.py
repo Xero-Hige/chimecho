@@ -1,6 +1,8 @@
-from flask import Flask, render_template, redirect, url_for, request
-from dummy_alert_generator import generate_alerts
 import csv
+
+from flask import Flask, render_template, redirect, url_for, request
+
+from dummy_alert_generator import generate_alerts
 
 app = Flask(__name__)
 
@@ -30,29 +32,40 @@ def root():
                            enabled=enabled)
 
 
-@app.route("/quest", methods=["POST"])
+@app.route("/create", methods=["POST"])
 def soldfor():
-    print (request.form)
-    fields = int(request.form["Fields_Number"])
+    fields_amount = int(request.form["Fields_Number"])
+    query = request.form["Query"]
+
     querys = []
-    for field_id in range(0, fields):
+
+    names = []
+    fields_list = []
+
+    for values in request.form:
+        if "FIELD_" in values:
+            column_rename = values[6:]
+            table_column = request.form[column_rename]
+            names.append(table_column)
+            fields_list.append(column_rename)
+
+    fields = ", ".join(fields_list) + ", "
+    query = query.replace("{FIELDS}", fields)
+
+    for field_id in range(0, fields_amount):
         if "CHK_{0}".format(field_id) in request.form:
             option = request.form.get("{0}_OPTION".format(field_id), "")
-            print ("{0}_OPTION".format(field_id),option)
             value = request.form.get("{0}_VALUE".format(field_id), "")
-            print ("{0}_VALUE".format(field_id),value)
-            query = request.form.get("{0}_QUERY".format(field_id), "")
-            print (option,value,query)
-            if not option or not value or not query:
+            field_query = request.form.get("{0}_QUERY".format(field_id), "")
+            if not option or not value or not field_query:
                 continue
 
-            query = query.format(option, value)
-            querys.append(query)
+            field_query = field_query.format(option, value)
+            querys.append(field_query)
 
     query_string = " AND ".join(querys)
-    print (querys,query_string)
-    query = request.form["Query"]
     query = query.replace("{CLAUSES}", query_string)
+
     print (query)
     return redirect(url_for('root'))
 
@@ -68,7 +81,7 @@ def create():
             id = int(line[0])
 
             if id == 0:
-                fields[id] = {"FIELDS": line[1].split("|")}
+                fields[id] = {"FIELDS": [x.split("|") for x in line[1:]]}
                 continue
 
             elif id == -1:

@@ -33,7 +33,7 @@ def root():
 
 
 @app.route("/create", methods=["POST"])
-def soldfor():
+def create_alert_query():
     fields_amount = int(request.form["Fields_Number"])
     query = request.form["Query"]
 

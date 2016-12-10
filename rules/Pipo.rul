@@ -1,0 +1,5 @@
+RED
+Pipo
+El es pipo
+SELECT SUM(MONTO_ORIGINAL), FECHA_VTO,  nro_comprob FROM cc_inm WHERE FECHA_VTO < 555 AND ESTADO != d group by nro_comprob
+Monto adeudado,Fecha de vencimiento

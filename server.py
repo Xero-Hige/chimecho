@@ -2,7 +2,7 @@ import csv
 
 from flask import Flask, render_template, redirect, url_for, request
 
-from dummy_alert_generator import generate_alerts
+from alerts_reader import load_alerts
 
 app = Flask(__name__)
 
@@ -15,7 +15,7 @@ enabled = {"red": True, "green": True, "yellow": True}
 @app.route('/')
 @app.route('/index')
 def root():
-    alerts = generate_alerts()
+    alerts = load_alerts()
     amounts = {}
 
     filtered_alerts = []
@@ -71,11 +71,11 @@ def soldfor():
     alert_description = request.form["ALERT_DESC"]
 
     with open("rules/" + alert_name + ".rul", "w") as alert_file:
-        alert_file.write(alert_level+"\n")
-        alert_file.write(alert_name+"\n")
-        alert_file.write(alert_description+"\n")
-        alert_file.write(query+"\n")
-        alert_file.write(",".join(names)+"\n")
+        alert_file.write(alert_level + "\n")
+        alert_file.write(alert_name + "\n")
+        alert_file.write(alert_description + "\n")
+        alert_file.write(query + "\n")
+        alert_file.write(",".join(names) + "\n")
 
     return redirect(url_for('root'))
 

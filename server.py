@@ -2,7 +2,11 @@ import csv
 
 from flask import Flask, render_template, redirect, url_for, request
 
-from alerts_reader import load_alerts
+from alerts_reader import load_alerts, read_alerts_file, list_alerts_types
+
+from math import ceil
+
+ALERTS_PER_PAGE = 2
 
 app = Flask(__name__)
 
@@ -13,7 +17,6 @@ enabled = {"red": True, "green": True, "yellow": True}
 
 
 @app.route('/')
-@app.route('/index')
 def root():
     alerts = load_alerts()
     amounts = {}
@@ -21,15 +24,31 @@ def root():
     filtered_alerts = []
 
     for alert in alerts:
-        type = alert["TYPE"]
-        amount = amounts.get(type, 0) + 1
-        amounts[type] = amount
-        if not enabled[type]:
+        alert_type = alert["TYPE"]
+        amount = amounts.get(alert_type, 0) + 1
+        amounts[alert_type] = amount
+        if not enabled[alert_type]:
             continue
         filtered_alerts.append(alert)
 
     return render_template("index.html", alerts=filtered_alerts, groups=groups, amounts=amounts,
                            enabled=enabled)
+
+
+@app.route("/list", methods=["GET", "POST"])
+def lists():
+    print (request.form)
+    alerts_types = list_alerts_types()
+    alert_name = request.form.get("ALERT", "")
+    page = int(request.form.get("PAGE", "0"))
+    alerts = read_alerts_file(alert_name)
+
+    pages = ceil(len(alerts) / ALERTS_PER_PAGE)
+
+    alerts = [alerts[i] for i in range(ALERTS_PER_PAGE * page, min(ALERTS_PER_PAGE * (page + 1), len(alerts)))]
+
+    return render_template("list.html", alerts=alerts, groups=groups, alerts_types=alerts_types, alert_name=alert_name,
+                           page=page, pages=pages)
 
 
 @app.route("/create", methods=["POST"])

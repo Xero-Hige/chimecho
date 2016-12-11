@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Listados</title>
 </head>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}">
 <script>
@@ -24,46 +24,64 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-12">
-
+            <div class="col-lg-2 text-center"><a href="/"><img
+                    src="https://dailygiveawayalert.com/assets/images/icon-alert.png"/></a>
+            </div>
+            <div class="col-lg-9 text-center"><h1>Listados Completos</h1></div>
+        </div>
+        <div class="col-lg-12">
             <div class="col-lg-2">
-                <a class="btn btn-primary btn-lg btn-block" href="/toggleRed" role="button">Rojas
-                    {% if not enabled["red"] %}
-                        <span class="badge">{{ amounts["red"] }}</span>
-                    {% endif %}
-                </a>
-                <a class="btn btn-primary btn-lg btn-block" href="/toggleYellow" role="button">Amarillas
-                    {% if not enabled["yellow"] %}
-                        <span class="badge">{{ amounts["yellow"] }}</span>
-                    {% endif %}
-                </a>
-                <a class="btn btn-primary btn-lg btn-block" href="/toggleGreen" role="button">Verdes
-                    {% if not enabled["green"] %}
-                        <span class="badge">{{ amounts["green"] }}</span>
-                    {% endif %}
-                </a>
+                <form action="/list" method="post">
+                    {% for alert_type in alerts_types %}
+                        {% if alert_type == alert_name %}
+                            <button class="btn btn-primary btn-lg btn-block" type="submit" name="ALERT"
+                                    value="{{ alert_type }}">{{ alert_type }}
+                                <span class="badge">+</span>
+                            </button>
+                        {% else %}
+                            <button class="btn btn-primary btn-lg btn-block" type="submit" name="ALERT"
+                                    value="{{ alert_type }}">{{ alert_type }}
+                            </button>
+                        {% endif %}
+                    {% endfor %}
+                </form>
             </div>
 
-            {% for  x in range(0,3) %}
-                <div class="col-lg-3">
+            <div class="col-lg-9 text-center">
 
-                    <div class="list-group" ondrop="drop(event)" ondragover="allowDrop(event)">
-                        {% for alert in alerts %}
-                            {% if loop.index0 % 3 == x %}
-                                <a class="list-group-item {{ groups[alert["TYPE"]] }}" draggable="true"
-                                   ondragstart="drag(event)" >
-                                    <h1>{{ alert["NAME"] }}</h1>
-                                    <h4>{{ alert["DESC"] }}</h4>
-                                    <ul>
-                                        {% for tag in alert["TAGS"] %}
-                                            <li><b>{{ tag[0] }}</b> -> <i>{{ tag[1] }}</i></li>
-                                        {% endfor %}
-                                    </ul>
-                                </a>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
+                <div class="list-group text-left" ondrop="drop(event)" ondragover="allowDrop(event)">
+                    {% for alert in alerts %}
+                        <a class="list-group-item {{ groups[alert["TYPE"]] }}" draggable="true"
+                           ondragstart="drag(event)">
+                            <h1>{{ alert["NAME"] }}</h1>
+                            <h4>{{ alert["DESC"] }}</h4>
+                            <ul>
+                                {% for tag in alert["TAGS"] %}
+                                    <li><b>{{ tag[0] }}</b> -> <i>{{ tag[1] }}</i></li>
+                                {% endfor %}
+                            </ul>
+                        </a>
+                    {% endfor %}
                 </div>
-            {% endfor %}
+                <form action="/list" method="post">
+                    {% if page > 0 %}
+                        <button class="btn btn-lg" type="submit" name="PAGE" value="{{ page - 1 }}"><</button>
+                    {% endif %}
+                    {% for p in range(page - 2,page) if p >= 0 %}
+                        <button class="btn btn-lg" type="submit" name="PAGE" value="{{ p }}">{{ p }}</button>
+                    {% endfor %}
+                    <button class="btn btn-lg btn-primary" type="submit" name="PAGE"
+                            value="{{ page }}">{{ page }}</button>
+                    {% for p in range(page + 1,page + 3) if p < pages %}
+                        <button class="btn btn-lg" type="submit" name="PAGE" value="{{ p }}">{{ p }}</button>
+                    {% endfor %}
+                    {% if page < pages-1 %}
+                        <button class="btn btn-lg" type="submit" name="PAGE" value="{{ page + 1 }}">></button>
+                    {% endif %}
+                    <input type="hidden" name="ALERT" value="{{ alert_name }}">
+                </form>
+
+            </div>
 
 
         </div>

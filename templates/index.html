@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Index</title>
 </head>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}">
 <script>
@@ -22,6 +22,13 @@
 </script>
 
 <div class="container-fluid">
+   <div class="row">
+        <div class="col-lg-12">
+            <div class="col-lg-2 text-center"><a href="/"><img
+                    src="https://dailygiveawayalert.com/assets/images/icon-alert.png"/></a>
+            </div>
+            <div class="col-lg-9 text-center"><h1>Listados Completos</h1></div>
+        </div>
     <div class="row">
         <div class="col-lg-12">
 
@@ -50,7 +57,7 @@
                         {% for alert in alerts %}
                             {% if loop.index0 % 3 == x %}
                                 <a class="list-group-item {{ groups[alert["TYPE"]] }}" draggable="true"
-                                   ondragstart="drag(event)" >
+                                   ondragstart="drag(event)">
                                     <h1>{{ alert["NAME"] }}</h1>
                                     <h4>{{ alert["DESC"] }}</h4>
                                     <ul>

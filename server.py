@@ -1,10 +1,10 @@
 import csv
+from math import ceil
 
 from flask import Flask, render_template, redirect, url_for, request
 
 from alerts_reader import load_alerts, read_alerts_file, list_alerts_types
-
-from math import ceil
+from alert_generator import generate_alerts
 
 ALERTS_PER_PAGE = 5
 PINED_ALERTS_PER_PAGE = 30
@@ -42,6 +42,7 @@ def root():
 
 @app.route("/load", methods=["GET", "POST"])
 def load():
+    generate_alerts()
     return redirect(url_for('root'))
 
 

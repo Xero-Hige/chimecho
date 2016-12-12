@@ -6,7 +6,8 @@ from alerts_reader import load_alerts, read_alerts_file, list_alerts_types
 
 from math import ceil
 
-ALERTS_PER_PAGE = 2
+ALERTS_PER_PAGE = 5
+PINED_ALERTS_PER_PAGE = 30
 
 app = Flask(__name__)
 
@@ -23,6 +24,7 @@ def root():
 
     filtered_alerts = []
 
+    added = 0
     for alert in alerts:
         alert_type = alert["TYPE"]
         amount = amounts.get(alert_type, 0) + 1
@@ -30,14 +32,21 @@ def root():
         if not enabled[alert_type]:
             continue
         filtered_alerts.append(alert)
+        added += 1
+        if added >= PINED_ALERTS_PER_PAGE:
+            break
 
     return render_template("index.html", alerts=filtered_alerts, groups=groups, amounts=amounts,
                            enabled=enabled)
 
 
+@app.route("/load", methods=["GET", "POST"])
+def load():
+    return redirect(url_for('root'))
+
+
 @app.route("/list", methods=["GET", "POST"])
 def lists():
-    print (request.form)
     alerts_types = list_alerts_types()
     alert_name = request.form.get("ALERT", "")
     page = int(request.form.get("PAGE", "0"))

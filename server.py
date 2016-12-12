@@ -3,8 +3,8 @@ from math import ceil
 
 from flask import Flask, render_template, redirect, url_for, request
 
-from alerts_reader import load_alerts, read_alerts_file, list_alerts_types
 from alert_generator import generate_alerts
+from alerts_reader import load_alerts, read_alerts_file, list_alerts_types
 
 ALERTS_PER_PAGE = 5
 PINED_ALERTS_PER_PAGE = 30
@@ -112,7 +112,7 @@ def create_alert_query():
 @app.route('/quest')
 def create():
     fields = {}
-    with open("classes") as my_file:
+    with open("rules_templates/classes") as my_file:
         resource_name = my_file.readline()
         reader = csv.reader(my_file)
 

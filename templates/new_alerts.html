@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Index</title>
+</head>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+<script>
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
+
+    function drag(ev) {
+        ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("text");
+        ev.target.appendChild(document.getElementById(data));
+    }
+</script>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="col-lg-2 text-center"><a href="/"><img
+                    src="https://dailygiveawayalert.com/assets/images/icon-alert.png"/></a>
+            </div>
+            <div class="col-lg-8 text-center"><h1>Crear nueva Alerta</h1></div>
+
+            <div class="col-lg-1 text-center"><a href="/" class="btn btn-info btn-block">Board</a>
+                <a href="/quest" class="btn btn-info btn-block">Nueva alerta</a>
+                <a href="/list" class="btn btn-info btn-block">Listado</a>
+                <a href="/load" class="btn btn-info btn-block">Load</a>
+            </div>
+        </div>
+    </div>
+    <div>
+        <br>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            {% for  x in range(0,3) %}
+                <div class="col-lg-3">
+                    {% for new_alert in alerts %}
+                        {% if loop.index0 % 3 == x %}
+                            <a class="btn btn-primary btn-lg btn-block" href="/quest/{{ new_alert }}"
+                               role="button">{{ new_alert }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+</html>

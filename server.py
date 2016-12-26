@@ -1,4 +1,5 @@
 import csv
+import os
 from math import ceil
 
 from flask import Flask, render_template, redirect, url_for, request
@@ -110,9 +111,25 @@ def create_alert_query():
 
 
 @app.route('/quest')
-def create():
+def create_list():
+    templates = []
+
+    for file_name in os.listdir("rules_templates"):
+        templates.append(file_name)
+
+    return render_template("new_alerts.html", alerts=templates)
+
+
+@app.route('/quest/<template>')
+def create(template):
     fields = {}
-    with open("rules_templates/classes") as my_file:
+
+    path = os.path.join("rules_templates",template)
+
+    if not (os.path.isfile(path)):
+        return redirect(url_for('create_list'))
+
+    with open("rules_templates/"+template) as my_file:
         resource_name = my_file.readline()
         reader = csv.reader(my_file)
 

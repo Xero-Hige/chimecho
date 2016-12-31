@@ -329,29 +329,33 @@
 
         <div class="container-fluid">
             <div class="col-lg-12">
-                <div class="col-lg-2">
-                    <form action="/list" method="post">
-                        {% for alert_type in alerts_types %}
-                            {% if alert_type == alert_name %}
-                                <button class="btn btn-primary btn-lg btn-block" type="submit" name="ALERT"
-                                        value="{{ alert_type }}">{{ alert_type }}
-                                    <span class="badge">+</span>
-                                </button>
-                            {% else %}
-                                <button class="btn btn-primary btn-lg btn-block" type="submit" name="ALERT"
-                                        value="{{ alert_type }}">{{ alert_type }}
-                                </button>
-                            {% endif %}
-                        {% endfor %}
-                    </form>
+                <div class="col-lg-3">
+                    <div class="panel panel-warning">
+                        <div class="panel-heading">Disponibles</div>
+                        <div class="panel-body">
+                            <form action="/list" method="post">
+                                {% for alert_type in alerts_types %}
+                                    {% if alert_type != alert_name %}
+                                        <button class="btn btn-outline btn-primary btn-block" type="submit" name="ALERT"
+                                                value="{{ alert_type }}">{{ alert_type }}
+                                        </button>
+                                    {% else %}
+                                        <button class="btn btn-primary btn-block" type="submit" name="ALERT"
+                                                value="{{ alert_type }}">{{ alert_type }}
+                                        </button>
+                                    {% endif %}
+                                {% endfor %}
+                            </form>
+                        </div>
+                    </div>
                 </div>
-
                 <div class="col-lg-9 text-center">
                     {% if alert_name %}
                         <div class="panel panel-info">
                             <div class="panel-heading">Listado de {{ alert_name }}</div>
                             <div class="panel-body">
-                                <div class="list-group text-left" ondrop="drop(event)" ondragover="allowDrop(event)">
+                                <div class="list-group text-left" ondrop="drop(event)"
+                                     ondragover="allowDrop(event)">
                                     {% for alert in alerts %}
                                         <div class="panel panel-{{ groups[alert["TYPE"]] }}">
                                             <div class="panel-heading">
@@ -371,7 +375,8 @@
                             <div class="panel-footer">
                                 <form action="/list" method="post">
                                     {% if page > 0 %}
-                                        <button class="btn btn-lg" type="submit" name="PAGE" value="{{ page - 1 }}"><
+                                        <button class="btn btn-lg" type="submit" name="PAGE" value="{{ page - 1 }}">
+                                            <
                                         </button>
                                     {% endif %}
                                     {% for p in range(page - 2,page) if p >= 0 %}
@@ -385,7 +390,8 @@
                                                 value="{{ p }}">{{ p }}</button>
                                     {% endfor %}
                                     {% if page < pages-1 %}
-                                        <button class="btn btn-lg" type="submit" name="PAGE" value="{{ page + 1 }}">>
+                                        <button class="btn btn-lg" type="submit" name="PAGE" value="{{ page + 1 }}">
+                                            >
                                         </button>
                                     {% endif %}
                                     <input type="hidden" name="ALERT" value="{{ alert_name }}">

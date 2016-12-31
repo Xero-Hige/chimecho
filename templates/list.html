@@ -347,48 +347,60 @@
                 </div>
 
                 <div class="col-lg-9 text-center">
-
-                    <div class="list-group text-left" ondrop="drop(event)" ondragover="allowDrop(event)">
-                        {% for alert in alerts %}
-                            <a class="list-group-item {{ groups[alert["TYPE"]] }}" draggable="true"
-                               ondragstart="drag(event)">
-                                <h1>{{ alert["NAME"] }}</h1>
-                                <h4>{{ alert["DESC"] }}</h4>
-                                <ul>
-                                    {% for tag in alert["TAGS"] %}
-                                        <li><b>{{ tag[0] }}</b> -> <i>{{ tag[1] }}</i></li>
+                    {% if alert_name %}
+                        <div class="panel panel-info">
+                            <div class="panel-heading">Listado de {{ alert_name }}</div>
+                            <div class="panel-body">
+                                <div class="list-group text-left" ondrop="drop(event)" ondragover="allowDrop(event)">
+                                    {% for alert in alerts %}
+                                        <div class="panel panel-{{ groups[alert["TYPE"]] }}">
+                                            <div class="panel-heading">
+                                                <ul>
+                                                    {% for tag in alert["TAGS"] %}
+                                                        <li><b>{{ tag[0] }}</b> -> <i>{{ tag[1] }}</i></li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                            <div class="panel-footer">
+                                                {{ alert["DESC"] }}
+                                            </div>
+                                        </div>
                                     {% endfor %}
-                                </ul>
-                            </a>
-                        {% endfor %}
-                    </div>
-                    <form action="/list" method="post">
-                        {% if page > 0 %}
-                            <button class="btn btn-lg" type="submit" name="PAGE" value="{{ page - 1 }}"><</button>
-                        {% endif %}
-                        {% for p in range(page - 2,page) if p >= 0 %}
-                            <button class="btn btn-lg" type="submit" name="PAGE" value="{{ p }}">{{ p }}</button>
-                        {% endfor %}
-                        <button class="btn btn-lg btn-primary" type="submit" name="PAGE"
-                                value="{{ page }}">{{ page }}</button>
-                        {% for p in range(page + 1,page + 3) if p < pages %}
-                            <button class="btn btn-lg" type="submit" name="PAGE" value="{{ p }}">{{ p }}</button>
-                        {% endfor %}
-                        {% if page < pages-1 %}
-                            <button class="btn btn-lg" type="submit" name="PAGE" value="{{ page + 1 }}">></button>
-                        {% endif %}
-                        <input type="hidden" name="ALERT" value="{{ alert_name }}">
-                    </form>
+                                </div>
+                            </div>
+                            <div class="panel-footer">
+                                <form action="/list" method="post">
+                                    {% if page > 0 %}
+                                        <button class="btn btn-lg" type="submit" name="PAGE" value="{{ page - 1 }}"><
+                                        </button>
+                                    {% endif %}
+                                    {% for p in range(page - 2,page) if p >= 0 %}
+                                        <button class="btn btn-lg" type="submit" name="PAGE"
+                                                value="{{ p }}">{{ p }}</button>
+                                    {% endfor %}
+                                    <button class="btn btn-lg btn-primary" type="submit" name="PAGE"
+                                            value="{{ page }}">{{ page }}</button>
+                                    {% for p in range(page + 1,page + 3) if p < pages %}
+                                        <button class="btn btn-lg" type="submit" name="PAGE"
+                                                value="{{ p }}">{{ p }}</button>
+                                    {% endfor %}
+                                    {% if page < pages-1 %}
+                                        <button class="btn btn-lg" type="submit" name="PAGE" value="{{ page + 1 }}">>
+                                        </button>
+                                    {% endif %}
+                                    <input type="hidden" name="ALERT" value="{{ alert_name }}">
+                                </form>
+                            </div>
 
+
+                        </div>
+                    {% endif %}
                 </div>
-
-
             </div>
-        </div>
 
-        <!-- Page content -->
+            <!-- Page content -->
+        </div>
     </div>
-</div>
 </body>
 
 

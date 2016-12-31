@@ -58,7 +58,8 @@ def lists():
 
     alerts = [alerts[i] for i in range(ALERTS_PER_PAGE * page, min(ALERTS_PER_PAGE * (page + 1), len(alerts)))]
 
-    return render_template("list.html", alerts=alerts, groups=groups, alerts_types=alerts_types, alert_name=alert_name,
+    return render_template("list.html", pagename="Listado completo", alerts=alerts, groups=groups,
+                           alerts_types=alerts_types, alert_name=alert_name,
                            page=page, pages=pages)
 
 
@@ -117,7 +118,7 @@ def create_list():
     for file_name in os.listdir("rules_templates"):
         templates.append(file_name)
 
-    return render_template("new_alerts.html", alerts=templates)
+    return render_template("new_alerts.html", pagename="Templates de alertas", alerts=templates)
 
 
 @app.route('/quest/<template>')
@@ -164,7 +165,8 @@ def create(template):
             field["QUERY"] = line[-1]
             fields[id] = field
 
-    return render_template("generator.html", fields=fields, resource_name=resource_name, sorted=sorted, len=len)
+    return render_template("generator.html", pagename="Nueva alerta tipo " + template, fields=fields,
+                           resource_name=resource_name, sorted=sorted, len=len)
 
 
 @app.route('/toggleRed')

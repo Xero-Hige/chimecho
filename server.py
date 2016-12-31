@@ -12,8 +12,8 @@ PINED_ALERTS_PER_PAGE = 30
 
 app = Flask(__name__)
 
-groups = {"red": "list-group-item-danger", "green": "list-group-item-success", "blue": "list-group-item-info",
-          "yellow": "list-group-item-warning"}
+groups = {"red": "red", "green": "green", "blue": "blue",
+          "yellow": "yellow"}
 
 enabled = {"red": True, "green": True, "yellow": True}
 

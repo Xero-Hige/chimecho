@@ -37,7 +37,7 @@ def root():
         if added >= PINED_ALERTS_PER_PAGE:
             break
 
-    return render_template("index.html", alerts=filtered_alerts, groups=groups, amounts=amounts,
+    return render_template("index.html", pagename="Tablero", alerts=filtered_alerts, groups=groups, amounts=amounts,
                            enabled=enabled)
 
 
@@ -124,12 +124,12 @@ def create_list():
 def create(template):
     fields = {}
 
-    path = os.path.join("rules_templates",template)
+    path = os.path.join("rules_templates", template)
 
     if not (os.path.isfile(path)):
         return redirect(url_for('create_list'))
 
-    with open("rules_templates/"+template) as my_file:
+    with open("rules_templates/" + template) as my_file:
         resource_name = my_file.readline()
         reader = csv.reader(my_file)
 

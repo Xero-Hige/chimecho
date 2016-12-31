@@ -324,65 +324,134 @@
         <!-- Page content -->
         <div class="container-fluid">
             <div class="row">
-                <div class="col-lg-12">
-                    <div class="col-lg-2 text-center"><a href="/"></a>
-                    </div>
-                    <div class="col-lg-8 text-center"><h1>Tablero</h1></div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12">
-                    {#
-                            <div class="col-lg-2">
-                                <a class="btn btn-primary btn-lg btn-block" href="/toggleRed" role="button">Rojas
-                                    {% if not enabled["red"] %}
-                                        <span class="badge">{{ amounts["red"] }}</span>
-                                    {% endif %}
-                                </a>
-                                <a class="btn btn-primary btn-lg btn-block" href="/toggleYellow" role="button">Amarillas
-                                    {% if not enabled["yellow"] %}
-                                        <span class="badge">{{ amounts["yellow"] }}</span>
-                                    {% endif %}
-                                </a>
-                                <a class="btn btn-primary btn-lg btn-block" href="/toggleGreen" role="button">Verdes
-                                    {% if not enabled["green"] %}
-                                        <span class="badge">{{ amounts["green"] }}</span>
-                                    {% endif %}
-                                </a>
-                            </div>#}
-
-                    {% for  x in range(0,3) %}
-                        <div class="col-lg-4">
-                            <div class="list-group" ondrop="drop(event)" ondragover="allowDrop(event)">
-                                {% for alert in alerts %}
-                                    {% if loop.index0 % 3 == x %}
-                                        <div class="panel panel-{{ groups[alert["TYPE"]] }}">
-                                            <div class="panel-heading">
-                                                {{ alert["NAME"] }}
-                                            </div>
-                                            <div class="panel-body">
-                                                <ul>
-                                                    {% for tag in alert["TAGS"] %}
-                                                        <li><b>{{ tag[0] }}</b> -> <i>{{ tag[1] }}</i></li>
-                                                    {% endfor %}
-                                                </ul>
-                                            </div>
-                                            <div class="panel-footer">
-                                                {{ alert["DESC"] }}
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                {% endfor %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="panel panel-green">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-info-circle fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">{{ amounts["green"] }}</div>
+                                    <div>alertas</div>
+                                </div>
                             </div>
                         </div>
-                    {% endfor %}
+                        <a href="/toggleGreen">
+                            <div class="panel-footer">
+                                {% if not enabled["green"] %}
+                                    <span class="pull-left">Ocultas</span>
+                                    <span class="pull-right"><i class="fa fa-ban"></i></span>
+                                {% else %}
+                                    <span class="pull-left">Visibles</span>
+                                    <span class="pull-right"><i class="fa fa-check-circle"></i></span>
+                                {% endif %}
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="panel panel-yellow">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-exclamation-circle fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">{{ amounts["yellow"] }}</div>
+                                    <div>alertas</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/toggleYellow">
+                            <div class="panel-footer">
+                                {% if not enabled["yellow"] %}
+                                    <span class="pull-left">Ocultas</span>
+                                    <span class="pull-right"><i class="fa fa-ban"></i></span>
+                                {% else %}
+                                    <span class="pull-left">Visibles</span>
+                                    <span class="pull-right"><i class="fa fa-check-circle"></i></span>
+                                {% endif %}
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="panel panel-red">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-exclamation-triangle fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">{{ amounts["red"] }}</div>
+                                    <div>alertas</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/toggleRed">
+                            <div class="panel-footer">
+                                {% if not enabled["red"] %}
+                                    <span class="pull-left">Ocultas</span>
+                                    <span class="pull-right"><i class="fa fa-ban"></i></span>
+                                {% else %}
+                                    <span class="pull-left">Visibles</span>
+                                    <span class="pull-right"><i class="fa fa-check-circle"></i></span>
+                                {% endif %}
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            Alertas
+                        </div>
+                        <div class="panel-body">
+                            {% for  x in range(0,3) %}
+                                <div class="col-lg-4">
+                                    <div class="list-group" ondrop="drop(event)" ondragover="allowDrop(event)">
+                                        {% for alert in alerts %}
+                                            {% if loop.index0 % 3 == x %}
+                                                <div class="panel panel-{{ groups[alert["TYPE"]] }}">
+                                                    <div class="panel-heading">
+                                                        {{ alert["NAME"] }}
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <ul>
+                                                            {% for tag in alert["TAGS"] %}
+                                                                <li><b>{{ tag[0] }}</b> -> <i>{{ tag[1] }}</i></li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                    </div>
+                                                    <div class="panel-footer">
+                                                        {{ alert["DESC"] }}
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="panel-footer">
+                            ASD
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <!-- Page content -->
         </div>
-
-        <!-- Page content -->
     </div>
-
+</div>
 </body>
 
 

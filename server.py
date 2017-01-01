@@ -18,11 +18,11 @@ groups = {"red": "red", "green": "green", "blue": "blue",
 enabled = {"red": True, "green": True, "yellow": True}
 
 
-@app.route('/')
+@app.route('/', methods=["GET", "POST"])
 def root():
     alerts = load_alerts()
     amounts = {}
-
+    page = int(request.form.get("PAGE", "0"))
     filtered_alerts = []
 
     added = 0
@@ -34,11 +34,13 @@ def root():
             continue
         filtered_alerts.append(alert)
         added += 1
-        if added >= PINED_ALERTS_PER_PAGE:
-            break
+
+    pages = ceil(len(filtered_alerts) / PINED_ALERTS_PER_PAGE)
+    filtered_alerts = [filtered_alerts[i] for i in range(PINED_ALERTS_PER_PAGE * page,
+                                                         min(PINED_ALERTS_PER_PAGE * (page + 1), len(filtered_alerts)))]
 
     return render_template("index.html", pagename="Tablero", alerts=filtered_alerts, groups=groups, amounts=amounts,
-                           enabled=enabled)
+                           enabled=enabled, page=page, pages=pages)
 
 
 @app.route("/load", methods=["GET", "POST"])

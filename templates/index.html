@@ -445,8 +445,32 @@
                                 </div>
                             {% endfor %}
                         </div>
-                        <div class="panel-footer">
-                            ASD
+                        <div class="panel-footer text-center">
+
+                            <form action="/" method="post">
+                                {% if page > 0 %}
+                                    <button class="btn btn-lg btn-outline btn-primary" type="submit" name="PAGE"
+                                            value="{{ page - 1 }}">
+                                        <
+                                    </button>
+                                {% endif %}
+                                {% for p in range(page - 2,page) if p >= 0 %}
+                                    <button class="btn btn-lg btn-outline btn-info" type="submit" name="PAGE"
+                                            value="{{ p }}">{{ p }}</button>
+                                {% endfor %}
+                                <button class="btn btn-lg btn-info" type="submit" name="PAGE"
+                                        value="{{ page }}">{{ page }}</button>
+                                {% for p in range(page + 1,page + 3) if p < pages %}
+                                    <button class="btn btn-lg btn-outline btn-info" type="submit" name="PAGE"
+                                            value="{{ p }}">{{ p }}</button>
+                                {% endfor %}
+                                {% if page < pages-1 %}
+                                    <button class="btn btn-lg btn-outline btn-primary" type="submit" name="PAGE"
+                                            value="{{ page + 1 }}">
+                                        >
+                                    </button>
+                                {% endif %}
+                            </form>
                         </div>
                     </div>
                 </div>

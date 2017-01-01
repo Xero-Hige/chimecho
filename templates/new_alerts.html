@@ -335,8 +335,8 @@
                         <div class="col-lg-3">
                             {% for new_alert in alerts %}
                                 {% if loop.index0 % 3 == x %}
-                                    <a class="btn btn-primary btn-lg btn-block" href="/quest/{{ new_alert }}"
-                                       role="button">{{ new_alert }}</a>
+                                    <a class="btn btn-outline btn-primary btn-block" href="/quest/{{ new_alert }}"
+                                       role="button">{{ new_alert.title() }}</a>
                                 {% endif %}
                             {% endfor %}
                         </div>

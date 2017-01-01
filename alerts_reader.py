@@ -18,6 +18,7 @@ def list_alerts_types():
     alerts_files = []
     for file_name in os.listdir(ALERTS_PATH):
         alerts_files.append(file_name)
+    alerts_files.sort()
     return alerts_files
 
 

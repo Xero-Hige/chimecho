@@ -118,6 +118,8 @@ def create_list():
     for file_name in os.listdir("rules_templates"):
         templates.append(file_name)
 
+    templates.sort()
+
     return render_template("new_alerts.html", pagename="Templates de alertas", alerts=templates)
 
 
@@ -165,7 +167,7 @@ def create(template):
             field["QUERY"] = line[-1]
             fields[id] = field
 
-    return render_template("generator.html", pagename="Nueva alerta tipo " + template, fields=fields,
+    return render_template("generator.html", pagename="Nueva alerta tipo " + template.title(), fields=fields,
                            resource_name=resource_name, sorted=sorted, len=len)
 
 

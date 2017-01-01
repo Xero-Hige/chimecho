@@ -337,11 +337,11 @@
                                 {% for alert_type in alerts_types %}
                                     {% if alert_type != alert_name %}
                                         <button class="btn btn-outline btn-primary btn-block" type="submit" name="ALERT"
-                                                value="{{ alert_type }}">{{ alert_type }}
+                                                value="{{ alert_type }}">{{ alert_type.title() }}
                                         </button>
                                     {% else %}
                                         <button class="btn btn-primary btn-block" type="submit" name="ALERT"
-                                                value="{{ alert_type }}">{{ alert_type }}
+                                                value="{{ alert_type }}">{{ alert_type.title() }}
                                         </button>
                                     {% endif %}
                                 {% endfor %}
@@ -352,7 +352,7 @@
                 <div class="col-lg-9 text-center">
                     {% if alert_name %}
                         <div class="panel panel-info">
-                            <div class="panel-heading">Listado de {{ alert_name }}</div>
+                            <div class="panel-heading">Listado de {{ alert_name.title() }}</div>
                             <div class="panel-body">
                                 <div class="list-group text-left" ondrop="drop(event)"
                                      ondragover="allowDrop(event)">

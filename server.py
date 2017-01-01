@@ -8,7 +8,7 @@ from alert_generator import generate_alerts
 from alerts_reader import load_alerts, read_alerts_file, list_alerts_types
 
 ALERTS_PER_PAGE = 5
-PINED_ALERTS_PER_PAGE = 30
+PINED_ALERTS_PER_PAGE = 18
 
 app = Flask(__name__)
 
@@ -113,7 +113,7 @@ def create_alert_query():
     return redirect(url_for('root'))
 
 
-@app.route('/quest')
+@app.route('/create')
 def create_list():
     templates = []
 
@@ -125,7 +125,7 @@ def create_list():
     return render_template("new_alerts.html", pagename="Templates de alertas", alerts=templates)
 
 
-@app.route('/quest/<template>')
+@app.route('/create/<template>')
 def create(template):
     fields = {}
 

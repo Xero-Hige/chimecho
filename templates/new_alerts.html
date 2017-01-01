@@ -306,7 +306,7 @@
                         <a href="/"><i class="fa fa-bell fa-fw"></i> Dashboard</a>
                     </li>
                     <li>
-                        <a href="/quest"><i class="fa fa-edit fa-fw"></i> Crear Alertas </a>
+                        <a href="/create"><i class="fa fa-edit fa-fw"></i> Crear Alertas </a>
                     </li>
                     <li>
                         <a href="/list"><i class="fa fa-bullhorn fa-fw"></i> Listado Completo </a>
@@ -335,7 +335,7 @@
                         <div class="col-lg-3">
                             {% for new_alert in alerts %}
                                 {% if loop.index0 % 3 == x %}
-                                    <a class="btn btn-outline btn-primary btn-block" href="/quest/{{ new_alert }}"
+                                    <a class="btn btn-outline btn-primary btn-block" href="/create/{{ new_alert }}"
                                        role="button">{{ new_alert.title() }}</a>
                                 {% endif %}
                             {% endfor %}

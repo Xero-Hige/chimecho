@@ -26,7 +26,7 @@ def generate_alerts():
                 alert["TAGS"] = tags
                 alerts.append(alert)
                 # cur.close()
-        file_name = file_name.replace(".rul","")
+        file_name = file_name.replace(".rul", "")
         with open("alerts/" + file_name, 'w') as my_file:
             writer = csv.writer(my_file)
             for alert in alerts:

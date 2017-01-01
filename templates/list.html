@@ -354,8 +354,7 @@
                         <div class="panel panel-info">
                             <div class="panel-heading">Listado de {{ alert_name.title() }}</div>
                             <div class="panel-body">
-                                <div class="list-group text-left" ondrop="drop(event)"
-                                     ondragover="allowDrop(event)">
+                                <div class="list-group text-left">
                                     {% for alert in alerts %}
                                         <div class="panel panel-{{ groups[alert["TYPE"]] }}">
                                             <div class="panel-heading">

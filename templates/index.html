@@ -336,7 +336,7 @@
                                     <i class="fa fa-info-circle fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">{{ amounts["green"] }}</div>
+                                    <div class="huge">{{ amounts.get("green",0) }}</div>
                                     <div>alertas</div>
                                 </div>
                             </div>
@@ -363,7 +363,7 @@
                                     <i class="fa fa-exclamation-circle fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">{{ amounts["yellow"] }}</div>
+                                    <div class="huge">{{ amounts.get("yellow",0) }}</div>
                                     <div>alertas</div>
                                 </div>
                             </div>
@@ -390,7 +390,7 @@
                                     <i class="fa fa-exclamation-triangle fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">{{ amounts["red"] }}</div>
+                                    <div class="huge">{{ amounts.get("red",0) }}</div>
                                     <div>alertas</div>
                                 </div>
                             </div>

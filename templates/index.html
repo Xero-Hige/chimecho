@@ -426,7 +426,7 @@
                                             {% if loop.index0 % 3 == x %}
                                                 <div class="panel panel-{{ groups[alert["TYPE"]] }}">
                                                     <div class="panel-heading">
-                                                        {{ alert["NAME"] }}
+                                                        {{ alert["NAME"].title() }}
                                                     </div>
                                                     <div class="panel-body">
                                                         <ul>

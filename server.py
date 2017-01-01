@@ -1,4 +1,5 @@
 import csv
+import functools
 import os
 from math import ceil
 
@@ -18,6 +19,22 @@ groups = {"red": "red", "green": "green", "blue": "blue",
 enabled = {"red": True, "green": True, "yellow": True}
 
 
+def alert_cmp(alert_1, alert_2):
+    if alert_1["TYPE"] == alert_2["TYPE"]:
+        if alert_1["NAME"].lower() < alert_2["NAME"].lower():
+            return 1
+        if alert_1["NAME"] == alert_2["NAME"]:
+            return 0
+        return -1
+    if alert_1["TYPE"].lower() == "red":
+        return 1
+    if alert_2["TYPE"].lower() == "red":
+        return -1
+    if alert_1["TYPE"].lower() == "yellow":
+        return 1
+    return -1
+
+
 @app.route('/', methods=["GET", "POST"])
 def root():
     alerts = load_alerts()
@@ -34,6 +51,8 @@ def root():
             continue
         filtered_alerts.append(alert)
         added += 1
+
+    filtered_alerts.sort(key=functools.cmp_to_key(alert_cmp), reverse=True)
 
     pages = ceil(len(filtered_alerts) / PINED_ALERTS_PER_PAGE)
     filtered_alerts = [filtered_alerts[i] for i in range(PINED_ALERTS_PER_PAGE * page,
@@ -139,14 +158,14 @@ def create(template):
         reader = csv.reader(my_file)
 
         for line in reader:
-            id = int(line[0])
+            field_id = int(line[0])
 
-            if id == 0:
-                fields[id] = {"FIELDS": [x.split("|") for x in line[1:]]}
+            if field_id == 0:
+                fields[field_id] = {"FIELDS": [x.split("|") for x in line[1:]]}
                 continue
 
-            elif id == -1:
-                fields[id] = {"QUERY": line[1]}
+            elif field_id == -1:
+                fields[field_id] = {"QUERY": line[1]}
                 continue
 
             name = line[1]
@@ -167,7 +186,7 @@ def create(template):
                 field["VALUES"] = [(options_labels[i], options_values[i]) for i in range(len(options_values))]
 
             field["QUERY"] = line[-1]
-            fields[id] = field
+            fields[field_id] = field
 
     return render_template("generator.html", pagename="Nueva alerta tipo " + template.title(), fields=fields,
                            resource_name=resource_name, sorted=sorted, len=len)

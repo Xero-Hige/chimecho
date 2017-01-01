@@ -1,31 +1,32 @@
 import csv
 import os
 
-ALERTS_PATH = "alerts/"
+ALERTS_PATH = "alerts"
+RULES_PATH = "rules"
 
 
 def load_alerts():
     alerts = []
     alerts_files = list_alerts_types()
 
-    for file_name in alerts_files:
-        alerts += read_alerts_file(file_name)
+    for filename in alerts_files:
+        alerts += read_alerts_file(filename)
 
     return alerts
 
 
 def list_alerts_types():
     alerts_files = []
-    for file_name in os.listdir(ALERTS_PATH):
-        alerts_files.append(file_name)
+    for filename in os.listdir(ALERTS_PATH):
+        alerts_files.append(filename)
     alerts_files.sort()
     return alerts_files
 
 
-def read_alerts_file(file_name):
+def read_alerts_file(filename):
     alerts = []
 
-    alert_path = os.path.join(ALERTS_PATH, file_name)
+    alert_path = os.path.join(ALERTS_PATH, filename)
 
     if not os.path.isfile(alert_path):
         return alerts
@@ -38,7 +39,7 @@ def read_alerts_file(file_name):
                 continue
 
             alert_type = alert[0].lower()
-            alert_name = file_name
+            alert_name = filename
             alert_description = alert[1]
 
             alert_dic = {"TYPE": alert_type, "NAME": alert_name, "DESC": alert_description}
@@ -47,3 +48,10 @@ def read_alerts_file(file_name):
             alerts.append(alert_dic)
 
     return alerts
+
+
+def remove_alert(filename):
+    alert_path = os.path.join(ALERTS_PATH, filename)
+    os.remove(alert_path)
+    alert_path = os.path.join(RULES_PATH, filename + ".rul")
+    os.remove(alert_path)

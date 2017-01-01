@@ -6,7 +6,7 @@ from math import ceil
 from flask import Flask, render_template, redirect, url_for, request
 
 from alert_generator import generate_alerts
-from alerts_reader import load_alerts, read_alerts_file, list_alerts_types
+from alerts_reader import load_alerts, read_alerts_file, list_alerts_types, remove_alert
 
 ALERTS_PER_PAGE = 5
 PINED_ALERTS_PER_PAGE = 18
@@ -131,6 +131,18 @@ def create_alert_query():
 
     return redirect(url_for('root'))
 
+
+@app.route('/delete', methods=["GET", "POST"])
+def delete_alerts():
+    alerts_types = list_alerts_types()
+    return render_template("delete_alerts.html", pagename="Eliminar alertas", alerts_types=alerts_types)
+
+
+@app.route('/delete_alert', methods=["POST"])
+def delete_alert():
+    alert_name = request.form.get("ALERT", "")
+    remove_alert(alert_name)
+    return redirect(url_for('root'))
 
 @app.route('/create')
 def create_list():

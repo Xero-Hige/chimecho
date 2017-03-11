@@ -1,16 +1,12 @@
 import csv
-import functools
 import os
 from math import ceil
 
 from flask import Flask, render_template, redirect, url_for, request
 
 from alert_generator import generate_alerts_from_rules
-from alerts_reader import load_alerts, read_alerts_file, list_alerts_types, remove_alert
+from alerts_reader import load_enabled_alerts, read_alerts_file, list_alerts_types, remove_alert
 from constants_config import *
-
-ALERTS_PER_PAGE = 5
-PINED_ALERTS_PER_PAGE = 18
 
 app = Flask(__name__)
 
@@ -20,47 +16,26 @@ groups = {ALERT_RED: ALERT_RED, ALERT_GREEN: ALERT_GREEN, "blue": "blue",
 enabled = {ALERT_RED: True, ALERT_GREEN: True, ALERT_YELLOW: True}
 
 
-def alert_cmp(alert_1, alert_2):
-    if alert_1["TYPE"] == alert_2["TYPE"]:
-        if alert_1["NAME"].lower() < alert_2["NAME"].lower():
-            return 1
-        if alert_1["NAME"] == alert_2["NAME"]:
-            return 0
-        return -1
-    if alert_1["TYPE"].lower() == ALERT_RED:
-        return 1
-    if alert_2["TYPE"].lower() == ALERT_RED:
-        return -1
-    if alert_1["TYPE"].lower() == ALERT_YELLOW:
-        return 1
-    return -1
-
-
 @app.route('/', methods=["GET", "POST"])
 def root():
-    alerts = load_alerts()
-    amounts = {}
+    alerts_amount, alerts, types_amounts = load_enabled_alerts(enabled)
     page = int(request.form.get("PAGE", "0"))
-    filtered_alerts = []
 
-    added = 0
-    for alert in alerts:
-        alert_type = alert["TYPE"]
-        amount = amounts.get(alert_type, 0) + 1
-        amounts[alert_type] = amount
-        if not enabled[alert_type]:
-            continue
-        filtered_alerts.append(alert)
-        added += 1
+    pages = ceil(alerts_amount / PINED_ALERTS_PER_PAGE)
+    filtered_alerts = [alerts[i]
+                       for i in
+                       range(
+                           PINED_ALERTS_PER_PAGE * page,
+                           min(PINED_ALERTS_PER_PAGE * (page + 1), alerts_amount))]
 
-    filtered_alerts.sort(key=functools.cmp_to_key(alert_cmp), reverse=True)
-
-    pages = ceil(len(filtered_alerts) / PINED_ALERTS_PER_PAGE)
-    filtered_alerts = [filtered_alerts[i] for i in range(PINED_ALERTS_PER_PAGE * page,
-                                                         min(PINED_ALERTS_PER_PAGE * (page + 1), len(filtered_alerts)))]
-
-    return render_template("index.html", pagename="Tablero", alerts=filtered_alerts, groups=groups, amounts=amounts,
-                           enabled=enabled, page=page, pages=pages)
+    return render_template("index.html",
+                           pagename="Tablero",
+                           alerts=filtered_alerts,
+                           groups=groups,
+                           amounts=types_amounts,
+                           enabled=enabled,
+                           page=page,
+                           pages=pages)
 
 
 @app.route("/load", methods=["GET", "POST"])
@@ -80,9 +55,14 @@ def lists():
 
     alerts = [alerts[i] for i in range(ALERTS_PER_PAGE * page, min(ALERTS_PER_PAGE * (page + 1), len(alerts)))]
 
-    return render_template("list.html", pagename="Listado completo", alerts=alerts, groups=groups,
-                           alerts_types=alerts_types, alert_name=alert_name,
-                           page=page, pages=pages)
+    return render_template("list.html",
+                           pagename="Listado completo",
+                           alerts=alerts,
+                           groups=groups,
+                           alerts_types=alerts_types,
+                           alert_name=alert_name,
+                           page=page,
+                           pages=pages)
 
 
 @app.route("/create", methods=["POST"])
@@ -136,7 +116,9 @@ def create_alert_query():
 @app.route('/delete', methods=["GET", "POST"])
 def delete_alerts():
     alerts_types = list_alerts_types()
-    return render_template("delete_alerts.html", pagename="Eliminar alertas", alerts_types=alerts_types)
+    return render_template("delete_alerts.html",
+                           pagename="Eliminar alertas",
+                           alerts_types=alerts_types)
 
 
 @app.route('/delete_alert', methods=["POST"])
@@ -155,7 +137,9 @@ def create_list():
 
     templates.sort()
 
-    return render_template("new_alerts.html", pagename="Templates de alertas", alerts=templates)
+    return render_template("new_alerts.html",
+                           pagename="Templates de alertas",
+                           alerts=templates)
 
 
 @app.route('/create/<template>')
@@ -202,8 +186,12 @@ def create(template):
             field["QUERY"] = line[-1]
             fields[field_id] = field
 
-    return render_template("generator.html", pagename="Nueva alerta tipo " + template.title(), fields=fields,
-                           resource_name=resource_name, sorted=sorted, len=len)
+    return render_template("generator.html",
+                           pagename="Nueva alerta tipo " + template.title(),
+                           fields=fields,
+                           resource_name=resource_name,
+                           sorted=sorted,
+                           len=len)
 
 
 @app.route('/toggleRed')  # TODO: IMPROVE

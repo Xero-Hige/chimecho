@@ -84,7 +84,7 @@ def __generate_alert_file(rules_filename):
 
         # cur = con.cursor()
         # cur.execute(alert_query)
-        cur = [("115", "13"), ("99", "192"), ("74", "88")]
+        cur = [("115", "13"), ("99", "192"), ("74", "88")] * 10000
         for result in cur:
             alert = __generate_alert(alert_description, alert_name, alert_results_tags, alert_type, result)
             alerts.append(alert)
@@ -94,7 +94,7 @@ def __generate_alert_file(rules_filename):
     with open(os.path.join(ALERTS_DIR, rules_filename), 'w') as my_file:
         writer = csv.writer(my_file)
         for alert in alerts:
-            line = [alert[ALERT_TYPE_FIELD], alert[ALERT_DESCRIPTION_FIELD]]
+            line = [alert[ALERT_TYPE_FIELD], alert[ALERT_NAME_FIELD], alert[ALERT_DESCRIPTION_FIELD]]
             for tag in alert[ALERT_TAGS_FIELD]:
                 line.append("|".join(tag))
             writer.writerow(line)

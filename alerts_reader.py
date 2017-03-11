@@ -40,10 +40,10 @@ def read_alerts_file(filename, filter_dic=None, base_dir=ALERTS_DIR, type_acumul
         reader = csv.reader(my_file)
 
         for alert in reader:
-            if len(alert) < 3:
+            if len(alert) < ALERT_TAGS_INDEX + 1:  # No enough fields
                 continue
 
-            alert_type = alert[0].lower()
+            alert_type = alert[ALERT_TYPE_INDEX].lower()
 
             if filter_dic:
                 if alert_type not in filter_dic or not filter_dic[alert_type]:
@@ -52,12 +52,14 @@ def read_alerts_file(filename, filter_dic=None, base_dir=ALERTS_DIR, type_acumul
             if type_acumulator:
                 type_acumulator[alert_type] = type_acumulator.get(alert_type, 0) + 1
 
-            alert_name = filename
-            alert_description = alert[1]
+            alert_name = alert[ALERT_NAME_INDEX]
+            alert_description = alert[ALERT_DESCRIPTION_INDEX]
 
-            alert_dic = {"TYPE": alert_type, "NAME": alert_name, "DESC": alert_description}
-            tags = [alert[i].split("|") for i in range(2, len(alert))]
-            alert_dic["TAGS"] = tags
+            alert_dic = {ALERT_TYPE_FIELD: alert_type,
+                         ALERT_NAME_FIELD: alert_name,
+                         ALERT_DESCRIPTION_FIELD: alert_description}
+            tags = [alert[i].split("|") for i in range(ALERT_TAGS_INDEX, len(alert))]
+            alert_dic[ALERT_TAGS_FIELD] = tags
 
             alerts.append(alert_dic)
 
@@ -67,5 +69,5 @@ def read_alerts_file(filename, filter_dic=None, base_dir=ALERTS_DIR, type_acumul
 def remove_alert(filename):
     alert_path = os.path.join(ALERTS_DIR, filename)
     os.remove(alert_path)
-    alert_path = os.path.join(RULES_DIR, filename + ".rul")
+    alert_path = os.path.join(RULES_DIR, filename + RULES_FILE_EXTENSION)
     os.remove(alert_path)

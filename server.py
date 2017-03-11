@@ -5,7 +5,7 @@ from math import ceil
 
 from flask import Flask, render_template, redirect, url_for, request
 
-from alert_generator import generate_alerts
+from alert_generator import generate_alerts_from_rules
 from alerts_reader import load_alerts, read_alerts_file, list_alerts_types, remove_alert
 
 ALERTS_PER_PAGE = 5
@@ -64,7 +64,7 @@ def root():
 
 @app.route("/load", methods=["GET", "POST"])
 def load():
-    generate_alerts()
+    generate_alerts_from_rules()
     return redirect(url_for('root'))
 
 

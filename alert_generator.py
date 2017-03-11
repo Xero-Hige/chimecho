@@ -8,15 +8,6 @@ from constants_config import *
 
 # con = cx_Oracle.connect('CONECTION')
 
-
-
-def __csv_next(csv_reader):
-    try:
-        return csv_reader.next()
-    except StopIteration:
-        return []
-
-
 def alert_cmp(alert_1, alert_2):
     """Compares 2 alerts represented as lists"""
     if alert_1[ALERT_TYPE_FIELD] == alert_2[ALERT_TYPE_FIELD]:
@@ -38,15 +29,15 @@ def __merge_ordered_alert_list(reader1, reader2, writer):
     """Merges two open csv alerts files in the writer.
         The input files must be ordered"""
 
-    alert1 = __csv_next(reader1)
-    alert2 = __csv_next(reader2)
+    alert1 = next(reader1, "")
+    alert2 = next(reader2, "")
     while alert1 and alert2:
         if alert1 <= alert2:
             writer.writerow(alert1)
-            alert1 = __csv_next(reader1)
+            alert1 = next(reader1, "")
             continue
         writer.writerow(alert2)
-        alert2 = __csv_next(reader2)
+        alert2 = next(reader2, "")
     for alert in reader1:
         writer.writerow(alert)
     for alert in reader2:
@@ -57,15 +48,15 @@ def __merge_alerts_files(alerts1_filename, alerts2_filename):
     """Takes 2 alerts filenames and merges both registries in a new file. Returns the new filename"""
     with open(alerts1_filename) as input1:
         with open(alerts2_filename) as input2:
-            with open("temporal_merge.tmp") as temp_output:
+            with open("temporal_merge.tmp", "w") as temp_output:
                 reader1 = csv.reader(input1)
                 reader2 = csv.reader(input2)
                 writer = csv.writer(temp_output)
 
                 __merge_ordered_alert_list(reader1, reader2, writer)
 
-    shutil.copyfile("temporal_merge.tmp", "SortedAlerts")
-    return "SortedAlerts"
+    shutil.copyfile("temporal_merge.tmp", ALL_ALERTS_FILE)
+    return ALL_ALERTS_FILE
 
 
 def __generate_sorted_alerts_file():
@@ -85,8 +76,8 @@ def __generate_alert(alert_description, alert_name, alert_results_tags, alert_ty
 def __generate_alert_file(rules_filename):
     alerts = []
     with open(os.path.join(RULES_DIR, rules_filename)) as my_file:
-        alert_type = my_file.readline().rstrip()
-        alert_name = my_file.readline().rstrip()
+        alert_type = my_file.readline().rstrip().upper()
+        alert_name = my_file.readline().rstrip().capitalize()
         alert_description = my_file.readline().rstrip()
         alert_query = my_file.readline().rstrip()
         alert_results_tags = my_file.readline().rstrip().split(",")
@@ -112,3 +103,4 @@ def __generate_alert_file(rules_filename):
 def generate_alerts_from_rules():
     for file_name in os.listdir(RULES_DIR):
         __generate_alert_file(file_name)
+    __generate_sorted_alerts_file()

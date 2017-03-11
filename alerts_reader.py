@@ -71,7 +71,7 @@ def read_alerts_file(filename, filter_dic=None, base_dir=ALERTS_DIR, type_acumul
             tags = [alert[i].split("|") for i in range(ALERT_TAGS_INDEX, len(alert))]
             alert_dic[ALERT_TAGS_FIELD] = tags
 
-            if offset <= alerts_count <= offset + window_size:
+            if offset <= alerts_count < offset + window_size:
                 alerts.append(alert_dic)
 
     return alerts, alerts_count

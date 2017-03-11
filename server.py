@@ -7,16 +7,17 @@ from flask import Flask, render_template, redirect, url_for, request
 
 from alert_generator import generate_alerts_from_rules
 from alerts_reader import load_alerts, read_alerts_file, list_alerts_types, remove_alert
+from constants_config import *
 
 ALERTS_PER_PAGE = 5
 PINED_ALERTS_PER_PAGE = 18
 
 app = Flask(__name__)
 
-groups = {"red": "red", "green": "green", "blue": "blue",
-          "yellow": "yellow"}
+groups = {ALERT_RED: ALERT_RED, ALERT_GREEN: ALERT_GREEN, "blue": "blue",
+          ALERT_YELLOW: ALERT_YELLOW}
 
-enabled = {"red": True, "green": True, "yellow": True}
+enabled = {ALERT_RED: True, ALERT_GREEN: True, ALERT_YELLOW: True}
 
 
 def alert_cmp(alert_1, alert_2):
@@ -26,11 +27,11 @@ def alert_cmp(alert_1, alert_2):
         if alert_1["NAME"] == alert_2["NAME"]:
             return 0
         return -1
-    if alert_1["TYPE"].lower() == "red":
+    if alert_1["TYPE"].lower() == ALERT_RED:
         return 1
-    if alert_2["TYPE"].lower() == "red":
+    if alert_2["TYPE"].lower() == ALERT_RED:
         return -1
-    if alert_1["TYPE"].lower() == "yellow":
+    if alert_1["TYPE"].lower() == ALERT_YELLOW:
         return 1
     return -1
 
@@ -144,6 +145,7 @@ def delete_alert():
     remove_alert(alert_name)
     return redirect(url_for('root'))
 
+
 @app.route('/create')
 def create_list():
     templates = []
@@ -184,13 +186,13 @@ def create(template):
             field_type = line[2]
             field = {"NAME": name, "TYPE": field_type}
 
-            if field_type == "FREE_COMPARER" or field_type == "CONDITIONAL_COMPARER":
+            if field_type == FIELD_FREE_COMPARER or field_type == FIELD_CONDITIONAL_COMPARER:
                 options_labels = line[3].split("|")
                 options_values = line[4].split("|")
 
                 field["OPTIONS"] = [(options_labels[i], options_values[i]) for i in range(len(options_values))]
 
-            if field_type == "CONDITIONAL_COMPARER":
+            if field_type == FIELD_CONDITIONAL_COMPARER:
                 options_labels = line[5].split("|")
                 options_values = line[6].split("|")
 
@@ -204,19 +206,19 @@ def create(template):
                            resource_name=resource_name, sorted=sorted, len=len)
 
 
-@app.route('/toggleRed')
+@app.route('/toggleRed')  # TODO: IMPROVE
 def toggle_red():
-    enabled["red"] = not enabled["red"]
+    enabled[ALERT_RED] = not enabled[ALERT_RED]
     return redirect(url_for('root'))
 
 
 @app.route('/toggleGreen')
 def toggle_green():
-    enabled["green"] = not enabled["green"]
+    enabled[ALERT_GREEN] = not enabled[ALERT_GREEN]
     return redirect(url_for('root'))
 
 
 @app.route('/toggleYellow')
 def toggle_yellow():
-    enabled["yellow"] = not enabled["yellow"]
+    enabled[ALERT_YELLOW] = not enabled[ALERT_YELLOW]
     return redirect(url_for('root'))

@@ -3,8 +3,11 @@ import functools
 import os
 import shutil
 
+from constants_config import *
+
 
 # con = cx_Oracle.connect('CONECTION')
+
 
 
 def __csv_next(csv_reader):
@@ -16,17 +19,17 @@ def __csv_next(csv_reader):
 
 def alert_cmp(alert_1, alert_2):
     """Compares 2 alerts represented as lists"""
-    if alert_1["TYPE"] == alert_2["TYPE"]:
-        if alert_1["NAME"].lower() < alert_2["NAME"].lower():
+    if alert_1[ALERT_TYPE_FIELD] == alert_2[ALERT_TYPE_FIELD]:
+        if alert_1[ALERT_NAME_FIELD].lower() < alert_2[ALERT_NAME_FIELD].lower():
             return 1
-        if alert_1["NAME"] == alert_2["NAME"]:
+        if alert_1[ALERT_NAME_FIELD] == alert_2[ALERT_NAME_FIELD]:
             return 0
         return -1
-    if alert_1["TYPE"].lower() == "red":
+    if alert_1[ALERT_TYPE_FIELD].lower() == ALERT_RED:
         return 1
-    if alert_2["TYPE"].lower() == "red":
+    if alert_2[ALERT_TYPE_FIELD].lower() == ALERT_RED:
         return -1
-    if alert_1["TYPE"].lower() == "yellow":
+    if alert_1[ALERT_TYPE_FIELD].lower() == ALERT_YELLOW:
         return 1
     return -1
 
@@ -67,21 +70,21 @@ def __merge_alerts_files(alerts1_filename, alerts2_filename):
 
 def __generate_sorted_alerts_file():
     alerts = []
-    for filename in os.listdir("./alerts"):
-        alerts.append(os.path.join("./alerts", filename))
+    for filename in os.listdir(ALERTS_DIR):
+        alerts.append(os.path.join(ALERTS_DIR, filename))
     functools.reduce(__merge_alerts_files, alerts)
 
 
 def __generate_alert(alert_description, alert_name, alert_results_tags, alert_type, result):
-    alert = {"TYPE": alert_type, "NAME": alert_name, "DESC": alert_description}
+    alert = {ALERT_TYPE_FIELD: alert_type, ALERT_NAME_FIELD: alert_name, ALERT_DESCRIPTION_FIELD: alert_description}
     tags = [(alert_results_tags[i], result[i]) for i in range(len(alert_results_tags))]
-    alert["TAGS"] = tags
+    alert[ALERT_TAGS_FIELD] = tags
     return alert
 
 
 def __generate_alert_file(rules_filename):
     alerts = []
-    with open("rules/" + rules_filename) as my_file:
+    with open(os.path.join(RULES_DIR, rules_filename)) as my_file:
         alert_type = my_file.readline().rstrip()
         alert_name = my_file.readline().rstrip()
         alert_description = my_file.readline().rstrip()
@@ -95,16 +98,17 @@ def __generate_alert_file(rules_filename):
             alert = __generate_alert(alert_description, alert_name, alert_results_tags, alert_type, result)
             alerts.append(alert)
             # cur.close()
-    rules_filename = rules_filename.replace(".rul", "")
-    with open("alerts/" + rules_filename, 'w') as my_file:
+    rules_filename = rules_filename.replace(RULES_FILE_EXTENSION, ALERTS_FILE_EXTENSION)
+
+    with open(os.path.join(ALERTS_DIR, rules_filename), 'w') as my_file:
         writer = csv.writer(my_file)
         for alert in alerts:
-            line = [alert["TYPE"], alert["DESC"]]
-            for tag in alert["TAGS"]:
+            line = [alert[ALERT_TYPE_FIELD], alert[ALERT_DESCRIPTION_FIELD]]
+            for tag in alert[ALERT_TAGS_FIELD]:
                 line.append("|".join(tag))
             writer.writerow(line)
 
 
 def generate_alerts_from_rules():
-    for file_name in os.listdir("rules/"):
+    for file_name in os.listdir(RULES_DIR):
         __generate_alert_file(file_name)

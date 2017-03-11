@@ -1,8 +1,7 @@
 import csv
 import os
 
-ALERTS_PATH = "alerts"
-RULES_PATH = "rules"
+from constants_config import *
 
 
 def load_alerts():
@@ -17,7 +16,7 @@ def load_alerts():
 
 def list_alerts_types():
     alerts_files = []
-    for filename in os.listdir(ALERTS_PATH):
+    for filename in os.listdir(ALERTS_DIR):
         alerts_files.append(filename)
     alerts_files.sort()
     return alerts_files
@@ -26,7 +25,7 @@ def list_alerts_types():
 def read_alerts_file(filename):
     alerts = []
 
-    alert_path = os.path.join(ALERTS_PATH, filename)
+    alert_path = os.path.join(ALERTS_DIR, filename)
 
     if not os.path.isfile(alert_path):
         return alerts
@@ -51,7 +50,7 @@ def read_alerts_file(filename):
 
 
 def remove_alert(filename):
-    alert_path = os.path.join(ALERTS_PATH, filename)
+    alert_path = os.path.join(ALERTS_DIR, filename)
     os.remove(alert_path)
-    alert_path = os.path.join(RULES_PATH, filename + ".rul")
+    alert_path = os.path.join(RULES_DIR, filename + ".rul")
     os.remove(alert_path)

@@ -18,19 +18,22 @@ enabled = {ALERT_RED: True, ALERT_GREEN: True, ALERT_YELLOW: True}
 
 @app.route('/', methods=["GET", "POST"])
 def root():
-    alerts_amount, alerts, types_amounts = load_enabled_alerts(enabled)
     page = int(request.form.get("PAGE", "0"))
 
+    alerts, alerts_amount, types_amounts = load_enabled_alerts(enabled,
+                                                               PINED_ALERTS_PER_PAGE * page,
+                                                               PINED_ALERTS_PER_PAGE)
+
     pages = ceil(alerts_amount / PINED_ALERTS_PER_PAGE)
-    filtered_alerts = [alerts[i]
+    """filtered_alerts = [alerts[i]
                        for i in
                        range(
                            PINED_ALERTS_PER_PAGE * page,
-                           min(PINED_ALERTS_PER_PAGE * (page + 1), alerts_amount))]
+                           min(PINED_ALERTS_PER_PAGE * (page + 1), alerts_amount))]"""
 
     return render_template("index.html",
                            pagename="Tablero",
-                           alerts=filtered_alerts,
+                           alerts=alerts,
                            groups=groups,
                            amounts=types_amounts,
                            enabled=enabled,
@@ -49,7 +52,7 @@ def lists():
     alerts_types = list_alerts_types()
     alert_name = request.form.get("ALERT", "")
     page = int(request.form.get("PAGE", "0"))
-    alerts = read_alerts_file(alert_name)
+    alerts = read_alerts_file(alert_name)[0]
 
     pages = ceil(len(alerts) / ALERTS_PER_PAGE)
 

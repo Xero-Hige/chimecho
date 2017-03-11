@@ -1,13 +1,19 @@
 import csv
+import math
 import os
 
 from constants_config import *
 
 
-def load_enabled_alerts(enabled_alerts_dic):
+def load_enabled_alerts(enabled_alerts_dic, offset=0, window_size=math.inf):
     types_acumulator = {ALERT_RED: 0}
-    alerts = read_alerts_file(ALL_ALERTS_FILE, enabled_alerts_dic, "", types_acumulator)
-    return len(alerts), alerts, types_acumulator
+    alerts, alerts_count = read_alerts_file(ALL_ALERTS_FILE,
+                                            enabled_alerts_dic,
+                                            "",
+                                            types_acumulator,
+                                            offset,
+                                            window_size)
+    return alerts, alerts_count, types_acumulator
 
 
 def load_alerts():
@@ -28,7 +34,8 @@ def list_alerts_types():
     return alerts_files
 
 
-def read_alerts_file(filename, filter_dic=None, base_dir=ALERTS_DIR, type_acumulator=None):
+def read_alerts_file(filename, filter_dic=None, base_dir=ALERTS_DIR, type_acumulator=None, offset=0,
+                     window_size=math.inf):
     alerts = []
 
     alert_path = os.path.join(base_dir, filename)
@@ -38,6 +45,7 @@ def read_alerts_file(filename, filter_dic=None, base_dir=ALERTS_DIR, type_acumul
 
     with open(alert_path) as my_file:
         reader = csv.reader(my_file)
+        alerts_count = 0
 
         for alert in reader:
             if len(alert) < ALERT_TAGS_INDEX + 1:  # No enough fields
@@ -52,6 +60,8 @@ def read_alerts_file(filename, filter_dic=None, base_dir=ALERTS_DIR, type_acumul
             if type_acumulator:
                 type_acumulator[alert_type] = type_acumulator.get(alert_type, 0) + 1
 
+            alerts_count += 1
+
             alert_name = alert[ALERT_NAME_INDEX]
             alert_description = alert[ALERT_DESCRIPTION_INDEX]
 
@@ -61,9 +71,10 @@ def read_alerts_file(filename, filter_dic=None, base_dir=ALERTS_DIR, type_acumul
             tags = [alert[i].split("|") for i in range(ALERT_TAGS_INDEX, len(alert))]
             alert_dic[ALERT_TAGS_FIELD] = tags
 
-            alerts.append(alert_dic)
+            if offset <= alerts_count <= offset + window_size:
+                alerts.append(alert_dic)
 
-    return alerts
+    return alerts, alerts_count
 
 
 def remove_alert(filename):

@@ -4,4 +4,4 @@ Cuenta Corriente Inmuebles
 2,Fecha,FREE_COMPARER,MAYOR A|MENOR A|IGUAL A,>|<|=,FECHA_VTO {0} {1}
 3,Estado,CONDITIONAL_COMPARER,IGUAL A|DISTINTO A,=|!=,S|D,s|d,ESTADO {0} {1}
 4,Adeudado,FREE_COMPARER,MAYOR A|MENOR A,>|<,SUM(MONTO_ORIGINAL) {0} {1}
--1,"SELECT {FIELDS_COMMON}{FIELDS_AGREGATE} nro_comprob FROM cc_inm {WHERE_CLAUSES} group by nro_comprob {HAVING_CLAUSES} order by {ORDER_FIELD}"
+-1,"SELECT {FIELDS_COMMON}{FIELDS_AGREGATE} nro_comprob FROM cc_inm {WHERE_CLAUSES} group by nro_comprob {HAVING_CLAUSES} order by  {ORDER_FIELD} nro_comprob"

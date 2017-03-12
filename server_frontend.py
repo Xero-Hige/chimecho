@@ -79,20 +79,28 @@ def create_alert_query():
     fields_amount = int(request.form["Fields_Number"])
     query = request.form["Query"]
 
-    querys = []
-
     names = []
     fields_list = []
+    agregate_list = []
 
     for values in request.form:
         if "FIELD_" in values:
             column_rename = values[6:]
             table_column = request.form[column_rename]
             names.append(table_column)
-            fields_list.append(column_rename)
+            if "(" in column_rename:
+                agregate_list.append(column_rename)
+            else:
+                fields_list.append(column_rename)
 
     fields = ", ".join(fields_list) + ", "
-    query = query.replace("{FIELDS}", fields)
+    query = query.replace("{FIELDS_COMMON}", fields)
+
+    fields = ", ".join(agregate_list) + ", "
+    query = query.replace("{FIELDS_AGREGATE}", fields)
+
+    where_fields = []
+    having_fields = []
 
     for field_id in range(0, fields_amount):
         if "CHK_{0}".format(field_id) in request.form:
@@ -103,10 +111,21 @@ def create_alert_query():
                 continue
 
             field_query = field_query.format(option, value)
-            querys.append(field_query)
 
-    query_string = " AND ".join(querys)
-    query = query.replace("{CLAUSES}", query_string)
+            if request.form.get("{0}_IS_AGREGATE".format(field_id), ""):
+                having_fields.append(field_query)
+            else:
+                where_fields.append(field_query)
+
+    if where_fields:
+        query_string = "WHERE " + " AND ".join(where_fields)
+        query = query.replace("{WHERE_CLAUSES}", query_string)
+
+    if having_fields:
+        query_string = "HAVING " + " AND ".join(having_fields)
+        query = query.replace("{HAVING_CLAUSES}", query_string)
+
+    query = query.replace("{ORDER_FIELD}", "")
 
     alert_level = request.form["ALERT_LEVEL"]
     alert_name = request.form["ALERT_NAME"]

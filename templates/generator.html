@@ -106,6 +106,10 @@
                         {% endif %}
                     </div>
                     <input type="hidden" value="{{ fields[field_id]["QUERY"] }}" name="{{ field_id }}_QUERY">
+                    {% if fields[field_id]["AGREGATE"] %}
+                        <input type="hidden" value="{{ fields[field_id]["AGREGATE"] }}"
+                               name="{{ field_id }}_IS_AGREGATE">
+                    {% endif %}
                 {% endfor %}
                 <!input type="hidden" value="empt">
                 <input type="hidden" value="{{ len(fields.keys()) }}" name="Fields_Number">

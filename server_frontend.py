@@ -25,11 +25,6 @@ def root():
                                                                PINED_ALERTS_PER_PAGE)
 
     pages = ceil(alerts_amount / PINED_ALERTS_PER_PAGE)
-    """filtered_alerts = [alerts[i]
-                       for i in
-                       range(
-                           PINED_ALERTS_PER_PAGE * page,
-                           min(PINED_ALERTS_PER_PAGE * (page + 1), alerts_amount))]"""
 
     return render_template("index.html",
                            pagename="Tablero",
@@ -51,6 +46,7 @@ def load():
 def lists():
     alerts_types = list_alerts_types()
     alert_name = request.form.get("ALERT", "")
+
     if alert_name:
         alerts = read_alerts_file(alert_name)[0]
     else:

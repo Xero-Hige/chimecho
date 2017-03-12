@@ -82,7 +82,14 @@ def read_alerts_file(filename, filter_dic=None, base_dir=ALERTS_DIR, type_acumul
 
 
 def remove_alert(filename):
-    alert_path = os.path.join(ALERTS_DIR, filename)
-    os.remove(alert_path)
-    alert_path = os.path.join(RULES_DIR, filename + RULES_FILE_EXTENSION)
-    os.remove(alert_path)
+    try:
+        alert_path = os.path.join(ALERTS_DIR, filename)
+        os.remove(alert_path)
+    except IOError:
+        pass
+
+    try:
+        alert_path = os.path.join(RULES_DIR, filename + RULES_FILE_EXTENSION)
+        os.remove(alert_path)
+    except IOError:
+        return

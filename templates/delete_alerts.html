@@ -1,24 +1,24 @@
 {% include "header.html" %}
 
 
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="col-lg-4"></div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="col-lg-4"></div>
 
-                    <div class="col-lg-4">
-                        <form action="/delete_alert" method="post">
-                            {% for alert_type in alerts_types %}
-                                <button class="btn btn-outline btn-danger btn-block" type="submit" name="ALERT"
-                                        value="{{ alert_type }}">{{ alert_type.title() }}
-                                </button>
-                            {% endfor %}
-                        </form>
-                    </div>
-                    <div class="col-lg-4"></div>
-
-                </div>
+            <div class="col-lg-4">
+                <form action="/delete_alert" method="post">
+                    {% for alert_type in alerts_types %}
+                        <button class="btn btn-outline btn-danger btn-block" type="submit" name="ALERT"
+                                value="{{ alert_type }}">{{ alert_type.title() }}
+                        </button>
+                    {% endfor %}
+                </form>
             </div>
+            <div class="col-lg-4"></div>
+
         </div>
+    </div>
+</div>
 
 {% include "footer.html" %}

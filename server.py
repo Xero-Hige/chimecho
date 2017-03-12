@@ -51,9 +51,12 @@ def load():
 def lists():
     alerts_types = list_alerts_types()
     alert_name = request.form.get("ALERT", "")
-    page = int(request.form.get("PAGE", "0"))
-    alerts = read_alerts_file(alert_name)[0]
+    if alert_name:
+        alerts = read_alerts_file(alert_name)[0]
+    else:
+        alerts = []
 
+    page = int(request.form.get("PAGE", "0"))
     pages = ceil(len(alerts) / ALERTS_PER_PAGE)
 
     alerts = [alerts[i] for i in range(ALERTS_PER_PAGE * page, min(ALERTS_PER_PAGE * (page + 1), len(alerts)))]

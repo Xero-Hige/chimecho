@@ -97,7 +97,7 @@ def create_alert_query():
     for field_id in range(0, fields_amount):
         if "CHK_{0}".format(field_id) in request.form:
             option = request.form.get("{0}_OPTION".format(field_id), "")
-            value = request.form.get("{0}_VALUE".format(field_id), "")
+            value = "'" + request.form.get("{0}_VALUE".format(field_id), "") + "'"  # Ads quotes to values
             field_query = request.form.get("{0}_QUERY".format(field_id), "")
             if not option or not value or not field_query:
                 continue
@@ -177,7 +177,8 @@ def create(template):
 
             name = line[1]
             field_type = line[2]
-            field = {"NAME": name, "TYPE": field_type}
+
+            field = {"NAME": name, "TYPE": field_type, "AGREGATE": False}
 
             if field_type == FIELD_FREE_COMPARER or field_type == FIELD_CONDITIONAL_COMPARER:
                 options_labels = line[3].split("|")
@@ -193,6 +194,10 @@ def create(template):
                 field["VALUES"] = [(options_labels[i], options_values[i]) for i in range(len(options_values))]
 
             field["QUERY"] = line[-1]
+
+            if "(" in field["QUERY"]:
+                field["AGREGATE"] = True
+
             fields[field_id] = field
 
     return render_template("generator.html",

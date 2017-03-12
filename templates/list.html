@@ -144,7 +144,7 @@
                 <div class="col-lg-9 text-center">
                     {% if alert_name %}
                         <div class="panel panel-info">
-                            <div class="panel-heading">Listado de {{ alert_name.title() }}</div>
+                            <div class="panel-heading">Listado de {{ alerts[0]["NAME"].title() }}</div>
                             <div class="panel-body">
                                 <div class="list-group text-left">
                                     {% for alert in alerts %}

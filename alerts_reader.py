@@ -5,14 +5,15 @@ import os
 from constants_config import *
 
 
-def load_enabled_alerts(enabled_alerts_dic, offset=0, window_size=math.inf):
+def load_enabled_alerts(enabled_alerts_dic, offset=0, window_size=math.inf, acumulate=True):
     types_acumulator = {ALERT_RED: 0}
-    alerts, alerts_count = read_alerts_file(ALL_ALERTS_FILE,
-                                            enabled_alerts_dic,
-                                            "",
-                                            types_acumulator,
-                                            offset,
-                                            window_size)
+    alerts, alerts_count = read_alerts_file(filename=ALL_ALERTS_FILE,
+                                            filter_dic=enabled_alerts_dic,
+                                            base_dir="",
+                                            type_acumulator=types_acumulator,
+                                            offset=offset,
+                                            window_size=window_size,
+                                            acumulate=acumulate)
     return alerts, alerts_count, types_acumulator
 
 
@@ -35,7 +36,7 @@ def list_alerts_types():
 
 
 def read_alerts_file(filename, filter_dic=None, base_dir=ALERTS_DIR, type_acumulator=None, offset=0,
-                     window_size=math.inf):
+                     window_size=math.inf, acumulate=True):
     alerts = []
 
     alert_path = os.path.join(base_dir, filename)
@@ -73,6 +74,9 @@ def read_alerts_file(filename, filter_dic=None, base_dir=ALERTS_DIR, type_acumul
 
             if offset <= alerts_count < offset + window_size:
                 alerts.append(alert_dic)
+
+            if alerts_count > offset + window_size and not acumulate:
+                break
 
     return alerts, alerts_count
 

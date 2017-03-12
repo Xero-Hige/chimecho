@@ -7,31 +7,36 @@ from flask import Flask, render_template, redirect, url_for, request
 from alert_generator import generate_alerts_from_rules
 from alerts_reader import load_enabled_alerts, read_alerts_file, list_alerts_types, remove_alert
 from constants_config import *
+from server import Server
 
 app = Flask(__name__)
 
-groups = {ALERT_RED: ALERT_RED, ALERT_GREEN: ALERT_GREEN, "blue": "blue",
-          ALERT_YELLOW: ALERT_YELLOW}
-
-enabled = {ALERT_RED: True, ALERT_GREEN: True, ALERT_YELLOW: True}
+server = Server()
 
 
 @app.route('/', methods=["GET", "POST"])
 def root():
     page = int(request.form.get("PAGE", "0"))
 
-    alerts, alerts_amount, types_amounts = load_enabled_alerts(enabled,
-                                                               PINED_ALERTS_PER_PAGE * page,
-                                                               PINED_ALERTS_PER_PAGE)
+    alerts, alerts_amount, types_amounts = load_enabled_alerts(enabled_alerts_dic=server.get_enabled_alerts(),
+                                                               offset=PINED_ALERTS_PER_PAGE * page,
+                                                               window_size=PINED_ALERTS_PER_PAGE,
+                                                               acumulate=not server.is_server_updated())
 
-    pages = ceil(alerts_amount / PINED_ALERTS_PER_PAGE)
+    if not server.are_counts_updated():
+        server.set_alerts_counts(alerts_amount)
+
+    if not server.are_types_counts_updated():
+        server.set_alerts_types_counts(types_amounts)
+
+    pages = ceil(server.get_alerts_counts() / PINED_ALERTS_PER_PAGE)
 
     return render_template("index.html",
                            pagename="Tablero",
                            alerts=alerts,
-                           groups=groups,
-                           amounts=types_amounts,
-                           enabled=enabled,
+                           groups=server.get_groups(),
+                           amounts=server.get_alerts_types_counts(),
+                           enabled=server.get_enabled_alerts(),
                            page=page,
                            pages=pages)
 
@@ -39,6 +44,8 @@ def root():
 @app.route("/load", methods=["GET", "POST"])
 def load():
     generate_alerts_from_rules()
+    server.reset_alerts_count()
+    server.reset_alerts_types_counts()
     return redirect(url_for('root'))
 
 
@@ -60,7 +67,7 @@ def lists():
     return render_template("list.html",
                            pagename="Listado completo",
                            alerts=alerts,
-                           groups=groups,
+                           groups=server.get_groups(),
                            alerts_types=alerts_types,
                            alert_name=alert_name,
                            page=page,
@@ -198,17 +205,20 @@ def create(template):
 
 @app.route('/toggleRed')  # TODO: IMPROVE
 def toggle_red():
-    enabled[ALERT_RED] = not enabled[ALERT_RED]
+    server.toggle_alert(ALERT_RED)
+    server.reset_alerts_count()
     return redirect(url_for('root'))
 
 
 @app.route('/toggleGreen')
 def toggle_green():
-    enabled[ALERT_GREEN] = not enabled[ALERT_GREEN]
+    server.toggle_alert(ALERT_GREEN)
+    server.reset_alerts_count()
     return redirect(url_for('root'))
 
 
 @app.route('/toggleYellow')
 def toggle_yellow():
-    enabled[ALERT_YELLOW] = not enabled[ALERT_YELLOW]
+    server.toggle_alert(ALERT_YELLOW)
+    server.reset_alerts_count()
     return redirect(url_for('root'))

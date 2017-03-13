@@ -3,6 +3,7 @@ from threading import Thread, RLock
 import schedule
 
 from alert_generator import generate_alerts_from_rules
+from alerts_reader import load_enabled_alerts
 from constants_config import *
 
 
@@ -22,6 +23,8 @@ class Server(object):
         self.server_status_lock = RLock()
 
         self.reload_alerts()
+        load_enabled_alerts(enabled_alerts_dic=self.get_enabled_alerts())
+
         schedule.every().day.at("01:40").do(self.reload_alerts)
 
     def get_enabled_alerts(self):

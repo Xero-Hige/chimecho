@@ -4,7 +4,6 @@ from math import ceil
 
 from flask import Flask, render_template, redirect, url_for, request
 
-from alert_generator import generate_alerts_from_rules
 from alerts_reader import load_enabled_alerts, read_alerts_file, list_alerts_types, remove_alert
 from constants_config import *
 from server import Server
@@ -43,9 +42,7 @@ def root():
 
 @app.route("/load", methods=["GET", "POST"])
 def load():
-    generate_alerts_from_rules()
-    server.reset_alerts_count()
-    server.reset_alerts_types_counts()
+    server.reload_alerts()
     return redirect(url_for('root'))
 
 

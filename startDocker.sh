@@ -1,3 +1,10 @@
 #!/usr/bin/env bash
 docker build -t xerohige/chimecho .
-docker run --net="host" -v $(pwd):/server -p 8888:8888 -p 6006:6006 xerohige/chimecho sh -c "/server/startServer.sh"
+docker run  --name "Chimecho" \
+            --net="host" \
+            -v $(pwd)/data/alerts:/chimecho/alerts \
+            -v $(pwd)/data/rules:/chimecho/rules \
+            -v $(pwd)/data/rules_templates:/chimecho/rules_templates \
+            -p 8155:5000 \
+            -p 1521:1521 \
+            xerohige/chimecho sh -c "/chimecho/startServer.sh"

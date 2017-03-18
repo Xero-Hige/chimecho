@@ -1,0 +1,5 @@
+RED
+Alerta Nueva
+Una cosa muy importante
+SELECT FECHA_VTO, SUM(MONTO_ORIGINAL),  nro_comprob FROM cc_inm WHERE ESTADO != s group by nro_comprob
+Fecha de vencimiento,Monto adeudado

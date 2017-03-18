@@ -19,11 +19,6 @@ RUN pip3 install cx_Oracle --no-cache-dir && \
     export LANG=en_US.utf-8 && \
     export LC_ALL=en_US.utf-8
 
-
-COPY . /chimecho
+COPY src /chimecho
 
 WORKDIR /chimecho
-
-RUN ls
-
-CMD ["bash","startServer.sh"]

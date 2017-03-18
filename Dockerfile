@@ -9,16 +9,21 @@ RUN apt-get update && \
         wget \
         locales \
         python3-pip \
-        python-devel \
-		    python3-setuptools && \
+        python3-setuptools && \
     rm -rf /var/lib/apt/lists/* && \
     aptitude clean
 
 RUN pip3 install cx_Oracle --no-cache-dir && \
-    pip3 install flask --no-cache-dir
+    pip3 install schedule --no-cache-dir && \
+    pip3 install flask --no-cache-dir && \
+    export LANG=en_US.utf-8 && \
+    export LC_ALL=en_US.utf-8
+
 
 COPY . /chimecho
 
 WORKDIR /chimecho
 
-CMD ["bash","StartMagus.sh"]
+RUN ls
+
+CMD ["bash","startServer.sh"]

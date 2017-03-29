@@ -90,10 +90,14 @@ def create_alert_query():
             else:
                 fields_list.append(column_rename)
 
-    fields = ", ".join(fields_list) + ", "
+    fields = ""
+    if fields_list:
+        fields = ", ".join(fields_list) + ", "
     query = query.replace("{FIELDS_COMMON}", fields)
 
-    fields = ", ".join(agregate_list) + ", "
+    fields = ""
+    if agregate_list:
+        fields = ", ".join(agregate_list) + ", "
     query = query.replace("{FIELDS_AGREGATE}", fields)
 
     where_fields = []
@@ -114,13 +118,17 @@ def create_alert_query():
             else:
                 where_fields.append(field_query)
 
+    query_string = ""
     if where_fields:
         query_string = "WHERE " + " AND ".join(where_fields)
-        query = query.replace("{WHERE_CLAUSES}", query_string)
 
+    query = query.replace("{WHERE_CLAUSES}", query_string)
+
+    query_string = ""
     if having_fields:
         query_string = "HAVING " + " AND ".join(having_fields)
-        query = query.replace("{HAVING_CLAUSES}", query_string)
+
+    query = query.replace("{HAVING_CLAUSES}", query_string)
 
     query = query.replace("{ORDER_FIELD}", "")
 

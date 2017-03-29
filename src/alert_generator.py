@@ -1,12 +1,14 @@
 import csv
 import functools
+import logging
 import os
 import shutil
 
+import cx_Oracle
+
+from connection import *
 from constants_config import *
 
-
-# con = cx_Oracle.connect('CONECTION')
 
 def alert_cmp(alert_1, alert_2):
     """Compares 2 alerts represented as lists"""
@@ -63,6 +65,10 @@ def __generate_sorted_alerts_file():
     alerts = []
     for filename in os.listdir(ALERTS_DIR):
         alerts.append(os.path.join(ALERTS_DIR, filename))
+
+    if not alerts:
+        return
+        
     functools.reduce(__merge_alerts_files, alerts)
 
 
@@ -74,6 +80,8 @@ def __generate_alert(alert_description, alert_name, alert_results_tags, alert_ty
 
 
 def __generate_alert_file(rules_filename):
+    con = cx_Oracle.connect(BD_STRING)
+
     alerts = []
     with open(os.path.join(RULES_DIR, rules_filename)) as my_file:
         alert_type = my_file.readline().rstrip().upper()
@@ -82,13 +90,22 @@ def __generate_alert_file(rules_filename):
         alert_query = my_file.readline().rstrip()
         alert_results_tags = my_file.readline().rstrip().split(",")
 
-        # cur = con.cursor()
-        # cur.execute(alert_query)
-        cur = [("115", "13"), ("99", "192"), ("74", "88")] * 10000
+        cur = con.cursor()
+        logging.warning("Executing query: " + str(alert_query))
+
+        try:
+            cur.execute(alert_query)
+        except cx_Oracle.DatabaseError as e:
+            logging.warning("Non executed: {0}".format(e))
+            return
+
         for result in cur:
+            logging.debug("Result: " + str(result))
             alert = __generate_alert(alert_description, alert_name, alert_results_tags, alert_type, result)
             alerts.append(alert)
-            # cur.close()
+            cur.close()
+
+    con.close()
     rules_filename = rules_filename.replace(RULES_FILE_EXTENSION, ALERTS_FILE_EXTENSION)
 
     with open(os.path.join(ALERTS_DIR, rules_filename), 'w') as my_file:

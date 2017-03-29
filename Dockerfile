@@ -4,11 +4,13 @@ MAINTAINER Xero-Hige <Gaston.martinez.90@gmail.com>
 WORKDIR /
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends aptitude apt-utils && \
+    apt-get install -y --no-install-recommends aptitude apt-utils build-essential && \
     aptitude install -y \
         wget \
         locales \
         python3-pip \
+	    python-dev \
+	    libaio-dev \
         python3-setuptools && \
     rm -rf /var/lib/apt/lists/* && \
     aptitude clean

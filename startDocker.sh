@@ -7,4 +7,5 @@ docker run  --name "Chimecho" \
             -v $(pwd)/data/rules_templates:/chimecho/rules_templates \
             -p 8155:5000 \
             -p 1521:1521 \
+            -p 26937:26937 \
             xerohige/chimecho sh -c "/chimecho/startServer.sh"

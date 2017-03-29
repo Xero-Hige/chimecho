@@ -68,7 +68,8 @@ def __generate_sorted_alerts_file():
 
     if not alerts:
         return
-        
+
+    alerts.append("/dev/null")
     functools.reduce(__merge_alerts_files, alerts)
 
 
@@ -100,22 +101,20 @@ def __generate_alert_file(rules_filename):
             return
 
         for result in cur:
-            logging.debug("Result: " + str(result))
             alert = __generate_alert(alert_description, alert_name, alert_results_tags, alert_type, result)
             alerts.append(alert)
-            cur.close()
 
     con.close()
-    rules_filename = rules_filename.replace(RULES_FILE_EXTENSION, ALERTS_FILE_EXTENSION)
+    alert_filename = rules_filename.replace(RULES_FILE_EXTENSION, ALERTS_FILE_EXTENSION)
 
-    with open(os.path.join(ALERTS_DIR, rules_filename), 'w') as my_file:
+    with open(os.path.join(ALERTS_DIR, alert_filename), 'w') as my_file:
         writer = csv.writer(my_file)
+        logging.warning("Opened")
         for alert in alerts:
             line = [alert[ALERT_TYPE_FIELD], alert[ALERT_NAME_FIELD], alert[ALERT_DESCRIPTION_FIELD]]
             for tag in alert[ALERT_TAGS_FIELD]:
-                line.append("|".join(tag))
+                line.append("|".join((str(tag[0]),str(tag[1]))))
             writer.writerow(line)
-
 
 def generate_alerts_from_rules():
     for file_name in os.listdir(RULES_DIR):

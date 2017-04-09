@@ -7,6 +7,15 @@ from alerts_reader import load_enabled_alerts
 from constants_config import *
 
 
+def is_date(date_string):
+    date_list = date_string.split("-")
+    if len(date_list) != 3:
+        return False
+
+    return len(date_list[0]) == 4 and len(date_list[1]) == 2 and len(date_list[2]) == 2 and date_list[0].isdigit() and \
+           date_list[1].isdigit() and date_list[2].isdigit()
+
+
 class Server(object):
     __ALERT_TYPES = [ALERT_RED, ALERT_GREEN, ALERT_YELLOW]
 

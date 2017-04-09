@@ -4,9 +4,8 @@ from math import ceil
 
 from flask import Flask, render_template, redirect, url_for, request
 
-from alerts_reader import load_enabled_alerts, read_alerts_file, list_alerts_types, remove_alert
-from constants_config import *
-from server import Server
+from alerts_reader import read_alerts_file, list_alerts_types, remove_alert
+from server import *
 
 app = Flask(__name__)
 
@@ -107,6 +106,8 @@ def create_alert_query():
         if "CHK_{0}".format(field_id) in request.form:
             option = request.form.get("{0}_OPTION".format(field_id), "")
             value = "'" + request.form.get("{0}_VALUE".format(field_id), "") + "'"  # Ads quotes to values
+            if is_date(value[1:len(value) - 1]):
+                value = "TO_DATE({},'YYYY-MM-DD')".format(value)
             field_query = request.form.get("{0}_QUERY".format(field_id), "")
             if not option or not value or not field_query:
                 continue
@@ -204,7 +205,7 @@ def create(template):
 
             field = {"NAME": name, "TYPE": field_type, "AGREGATE": False}
 
-            if field_type == FIELD_FREE_COMPARER or field_type == FIELD_CONDITIONAL_COMPARER:
+            if field_type in [FIELD_FREE_COMPARER, FIELD_CONDITIONAL_COMPARER, FIELD_DATE_COMPARER]:
                 options_labels = line[3].split("|")
                 options_values = line[4].split("|")
 

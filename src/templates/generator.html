@@ -83,6 +83,22 @@
                             </div>
                         {% endif %}
 
+                        {% if fields[field_id]["TYPE"] == "DATE_COMPARER" %}
+                            <div class="col-lg-4">
+
+                                <select class="form-control" name="{{ field_id }}_OPTION">
+                                    {% for option in fields[field_id]["OPTIONS"] %}
+                                        <option value="{{ option[1] }}">{{ option[0] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <input class="form-control" placeholder="{{ fields[field_id]["NAME"] }}"
+                                       type="date" name="{{ field_id }}_VALUE">
+                            </div>
+                        {% endif %}
+
                         {% if fields[field_id]["TYPE"] == "CONDITIONAL_COMPARER" %}
                             <div class="col-lg-4">
 

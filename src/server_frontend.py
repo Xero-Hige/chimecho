@@ -11,10 +11,6 @@ app = Flask(__name__)
 
 server = Server()
 
-app.add_url_rule('/favicon.ico',
-                 redirect_to=url_for('static', filename='images/favicon.ico'))
-
-
 @app.route('/', methods=["GET", "POST"])
 def root():
     page = int(request.form.get("PAGE", "0"))
